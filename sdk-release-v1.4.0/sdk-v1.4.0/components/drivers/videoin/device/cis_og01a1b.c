@@ -727,8 +727,18 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
         exposure = MAX_EXPOSURE;
     itime_l = exposure & 0xff;
     itime_h = (exposure >> 8) & 0xff;
+    
+    exposure = exposure << 8;
+    itime_l = exposure & 0xff;
+    itime_h = (exposure >> 8) & 0xff;
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3927, itime_l);
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3928, itime_h);
+
+
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3502, itime_l);
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h);
+
+
 
     // again
     uint8_t again_coarse = (int)again;
