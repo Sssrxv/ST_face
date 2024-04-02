@@ -21,7 +21,8 @@
 // #define OUT_PUT_SIZE           og01a1b_1280_1024
 // frame length is set by {0x380E, 0x380F}
 // maximum exposure time is frame length - 14
-#define MAX_EXPOSURE (641 - 14)
+// #define MAX_EXPOSURE (1818 - 25)
+#define MAX_EXPOSURE 259
 
 
 typedef struct _og01a1b_REG_T {
@@ -719,15 +720,15 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
 
 
     // exposure
-    // uint8_t itime_h;
-    // uint8_t itime_l;
-    // uint32_t exposure = (int)itime;
-    // if (exposure > MAX_EXPOSURE)
-    //     exposure = MAX_EXPOSURE;
-    // itime_l = exposure & 0xff;
-    // itime_h = (exposure >> 8) & 0xff;
-    // og01a1b_write_reg(i2c_num, i2c_addr, 0x3502, itime_l);
-    // og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h);
+    uint8_t itime_h;
+    uint8_t itime_l;
+    uint32_t exposure = (int)itime;
+    if (exposure > MAX_EXPOSURE)
+        exposure = MAX_EXPOSURE;
+    itime_l = exposure & 0xff;
+    itime_h = (exposure >> 8) & 0xff;
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3502, itime_l);
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h);
 
     // again
     uint8_t again_coarse = (int)again;
