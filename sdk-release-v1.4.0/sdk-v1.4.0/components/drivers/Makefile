@@ -1,0 +1,8 @@
+-include $(SDK_ROOT)/components/drivers/audio/Makefile
+-include $(SDK_ROOT)/components/drivers/fingerprint/Makefile
+-include $(SDK_ROOT)/components/drivers/flash/Makefile
+-include $(SDK_ROOT)/components/drivers/led/Makefile
+-include $(SDK_ROOT)/components/drivers/usb2otg/Makefile
+-include $(SDK_ROOT)/components/drivers/videoin/Makefile
+-include $(SDK_ROOT)/components/drivers/display/Makefile
+-include $(SDK_ROOT)/components/drivers/indev/Makefile

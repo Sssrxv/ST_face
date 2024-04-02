@@ -1,0 +1,15 @@
+mainmenu "Main Menu"
+
+comment "AIVA ai31xx SDK Kconfig"
+
+config DEBUG
+	bool "Enable debug build"
+	default n
+
+# source Kconfig of chip
+rsource "./chipKconfig"
+
+# source Kconfig of sdk components
+rsource "./components/Kconfig"
+
+# add more config for you own project

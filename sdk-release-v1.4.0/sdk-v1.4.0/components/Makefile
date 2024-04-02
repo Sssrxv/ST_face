@@ -1,0 +1,3 @@
+-include $(SDK_ROOT)/components/drivers/Makefile
+-include $(SDK_ROOT)/components/shell_utils/Makefile
+-include $(SDK_ROOT)/components/gui/Makefile

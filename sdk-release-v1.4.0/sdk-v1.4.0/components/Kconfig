@@ -1,0 +1,225 @@
+mainmenu "Main Menu"
+
+comment "AIVA ai31xx SDK component Kconfig"
+
+menu "Device drivers"
+    comment "Audio drivers"
+    config AUDIO_ES8374
+        bool "audio es8374 driver"
+        default n
+    config AUDIO_ES8311
+        bool "audio es8311 driver"
+        default n
+    config AUDIO_ES8388
+        bool "audio es8388 driver"
+        default n
+
+    comment "Fingerprint drivers"
+    config FPC1150
+        bool "fpc1150 driver"
+        default n
+
+    comment "Flash drivers"
+    comment "NAND flash"
+	config GD5FXX
+		bool "gd5fxx nand flash"
+		default n
+	config MX35LFXXE4
+		bool "mx35lfxxe4 nand flash"
+		default n
+	config W25NXX
+		bool "w25nxx nand flash"
+		default n
+    comment "NOR flash"
+	config GD25QXX
+		bool "gd25qxx nor flash"
+		default n
+	config MX25LXX
+		bool "mx25lxx nor flash"
+		default n
+	config W25QXX
+		bool "w25qxx nor flash"
+		default y
+	config P25QXX
+		bool "p25qxx nor flash"
+		default y
+	config XT25QXX
+		bool "xt25qxx nor flash"
+		default y
+
+    comment "indev drivers"
+	config INDEV_TOUCHPAD_SIM
+		depends on GUI_USE_LVGL
+		bool "indev touchpad software sim"
+		default n
+	config INDEV_FT6336U
+		bool "indev touchpad ft6336u"
+		default n
+
+    comment "LED drivers"
+	config GPIO_LED_DRIVER
+		bool "GPIO LED driver"
+		default n
+	config LM3644
+		bool "LM3644 driver"
+		default n
+	config VAS1071
+		bool "VAS1071 driver"
+		default n
+	config PHX3D8014
+		bool "PHX3D8014 driver"
+		default n
+	
+    comment "USB gadget drivers"
+	config USB_SINK_LPBK
+		bool "Usb sink loopback driver"
+		default n
+    config UVC_CAMERA
+		bool "UVC bulk camera with ACM driver"
+		default n
+    
+    comment "Videoin MIPI-CIS drivers"
+	config MIPI_CIS_GC1054
+		bool "mipi cis gc1054"
+		default n
+	config MIPI_CIS_OG0VA1B
+		bool "mipi cis og0va1b"
+		default n
+	config MIPI_CIS_OG01A1B
+		bool "mipi cis og01a1b"
+		default n
+	config MIPI_CIS_OV02K10
+		bool "mipi cis ov02k10"
+		default n
+	config MIPI_CIS_OV02K10_HDR
+		bool "mipi cis ov02k10_hdr"
+		default n
+	config MIPI_CIS_SC132GS
+		bool "mipi cis sc132gs"
+		default n
+	config MIPI_CIS_SC132GS_HDR
+		bool "mipi cis sc132gs_hdr"
+		default n
+	config MIPI_CIS_GC2053
+		bool "mipi cis gc2053"
+		default n
+	config MIPI_CIS_SC200
+		bool "mipi cis sc200"
+		default n
+
+    comment "Videoin DVPI-CIS drivers"
+	config DVPI_CIS_OV7725
+		bool "dvpi cis ov7725"
+		default n
+
+    comment "Display DVPO drivers"
+        config DISPLAY_DVPOUT_ILI9806E
+                bool "dvpo ili9806e"
+                default n
+
+    comment "Display I80 drivers"
+        config DISPLAY_I80_JLT28010C
+                bool "i80 jlt28010c"
+                default n
+
+		config DISPLAY_I80_ST7365P
+                bool "i80 st7365p"
+                default n
+
+        config DISPLAY_I80_JLT28024A
+                bool "i80 jlt28024a"
+                default n
+
+        config DISPLAY_I80_ALIENTEK28
+                bool "i80 alientek28"
+                default n
+
+    comment "Display SPI LCD drivers"
+        config DISPLAY_SPI_LCD_ILI9341
+                bool "spi lcd ili9341"
+                default n
+
+        config DISPLAY_SPI_LCD_ILI9488
+                bool "spi lcd ili9488"
+                default n
+
+        config DISPLAY_SPI_LCD_ST7796
+                bool "spi lcd st7796"
+                default n
+
+endmenu
+
+menu "Shell utilities"
+	config SHELL_CAT
+		bool "shell command: cat"
+		default y
+	config SHELL_CD
+		bool "shell command: cd"
+		default y
+	config SHELL_CP
+		bool "shell command: cp"
+		default y
+	config SHELL_DF
+		bool "shell command: df"
+		default y
+	config SHELL_ECHO
+		bool "shell command: echo"
+		default y
+	config SHELL_I2C
+		bool "shell command: i2c"
+		default n
+	config SHELL_LED_DRIVER
+		bool "shell command: led_driver"
+		default n
+	config SHELL_LOAD
+		bool "shell command: load"
+		default y
+	config SHELL_LS
+		bool "shell command: ls"
+		default y
+	config SHELL_LS_TASK
+		bool "shell command: ls_task"
+		default y
+	config SHELL_MEM_RW
+		bool "shell command: r4/w4/dump"
+		default n
+	config SHELL_MKDIR
+		bool "shell command: mkdir"
+		default n
+	config SHELL_ACM_SHELL
+		bool "shell command: usb_acm_shell"
+		default n
+		select UVC_CAMERA if SHELL_ACM_SHELL
+	config SHELL_PART
+		bool "shell command: part"
+		default y
+	config SHELL_PWD
+		bool "shell command: pwd"
+		default y
+	config SHELL_REBOOT
+		bool "shell command: reboot"
+		default y
+	config SHELL_REMOVE
+		bool "shell command: rm"
+		default y
+	config SHELL_SENSOR_EXPO
+		bool "shell command: sensor_expo"
+		default n
+	config SHELL_UPLOAD
+		bool "shell command: upload"
+		default y
+	config SHELL_USB_ACM_LOAD
+		depends on UVC_CAMERA
+		bool "shell command: usb_acm_load"
+		default n
+	config SHELL_USB_ACM_UPLOAD
+		depends on UVC_CAMERA
+		bool "shell command: usb_acm_upload"
+		default n
+endmenu
+
+menu "GUI LVGL"
+	config GUI_USE_LVGL
+		bool "gui use LVGL"
+		default n	
+endmenu

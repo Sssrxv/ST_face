@@ -1,0 +1,73 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "debug example",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/examples/rtos/bin/rtos_example.elf",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gdb",
+            "targetArchitecture": "arm",
+            "preLaunchTask": "build examples",
+            "postDebugTask": "kill gdb",
+            "logging": {
+                "engineLogging": false
+            },
+            "setupCommands": [
+                {
+                    "text": "set target-async off",
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": false,
+                },
+                {
+                    "description": "Change gdb's current working directory",
+                    "text": "cd ${workspaceFolder}",
+                    "ignoreFailures": false,
+                },
+                {
+                    "description": "Source gdbdbg",
+                    "text": "source scripts/gdb/gdbdbg.gdb",
+                    "ignoreFailures": false,
+                },
+                {
+                    "description": "Source sram.gdb",
+                    "text": "source scripts/gdb/sram.gdb",
+                    "ignoreFailures": false,
+                },
+                {
+                    "description": "reset",
+                    "text": "reset",
+                    "ignoreFailures": false,
+                },
+                {
+                    "description": "load",
+                    "text": "load ${workspaceFolder}/examples/rtos/bin/rtos_example.elf",
+                    "ignoreFailures": false,
+                },
+                {
+                    "description": "file",
+                    "text": "load ${workspaceFolder}/examples/rtos/bin/rtos_example.elf",
+                    "ignoreFailures": false,
+                },
+                // {
+                //     "description": "break at main",
+                //     "text": "b main",
+                //     "ignoreFailures": false,
+                // },
+            ]
+        }
+    ]
+}

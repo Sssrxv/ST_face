@@ -1,0 +1,24 @@
+menu "Chip seclect"
+	config USE_FPGA
+		bool "Run on FPGA"
+		default n
+	choice
+		prompt "Chip Select"
+		default CHIP310XH
+		help
+			Select chip which you wanto run the sdk
+
+		config CHIP310X
+			bool "AI310X"
+
+		# config CHIP310X_H264
+		# 	bool "AI310X_H264"
+		
+		config CHIP310XH
+			bool "AI310XH"
+
+		# config CHIP310XH_H264
+		# 	bool "AI310XH_H264"
+
+	endchoice
+endmenu

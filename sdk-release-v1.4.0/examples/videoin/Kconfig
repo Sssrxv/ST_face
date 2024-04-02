@@ -1,0 +1,21 @@
+# source Kconfig of sdk
+rsource "../../sdk/Kconfig"
+
+# add more config for you own project
+	choice
+		prompt "Select videoin example"
+		config USE_MIPI_MONO_UVC
+			bool "MIPI_MONO_UVC"
+
+		config USE_MIPI_STEREO_UVC
+			bool "MIPI_STEREO_UVC"
+
+		config USE_DVPI_MONO_UVC
+			bool "DVPI_MONO_UVC"		
+
+		config USE_DVPI_MONO_MIPI_STEREO_UVC
+			bool "DVPI_MONO_MIPI_STEREO_UVC"			
+
+		config USE_DVPI_MONO_MIPI_MONO_MIPI_STEREO_UVC
+			bool "DVPI_MONO_MIPI_MONO_MIPI_STEREO_UVC"							
+	endchoice

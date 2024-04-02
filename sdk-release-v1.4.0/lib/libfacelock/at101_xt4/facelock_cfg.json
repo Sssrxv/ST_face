@@ -1,0 +1,37 @@
+{
+  "board" : {
+    "cfg_version": 16842752,
+    "name": "AT101",
+    "sensor": {
+      "comment": ["Left IR", "Right IR", "RGB"],
+      "sensor_udevices": ["og01a1b_dev2", "og01a1b_dev1", "og01a1b_dev0"],
+      "mipi": [2, 1, 0],
+      "i2c_num": [2, 2, 0],
+      "i2c_addr": [96, 16, 16],
+      "mclk_id": [1, 1, 0],
+      "power_pin": [2, 2, 29],
+      "reset_pin": [2, 2, 0],
+      "rot_mode": [4, 4, 2],
+      "fps": [15, 15, 15]
+    },
+    "led" : {
+      "udevice": "phx3d8014"
+    }
+  },
+  "common" : {
+    "led_timeout_ms_gpio": 90,
+    "enable_handler_upload_image": 0
+  },
+  "enroll" : {
+    "single_enroll_max_yaw":25
+  },
+  "debug" : {
+    "enable_debug": 1,
+    "serial_acm_facelock": 1
+  },
+  "verify" : {
+    "continuous_run_cnt": 50,
+    "continuous_run_cnt_sleep_ms": 20000,
+    "abnormal_face_timeout_second": 5
+  }
+}

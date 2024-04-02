@@ -1,0 +1,21 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build examples",
+            "type": "shell",
+            "command": "source ${workspaceFolder}/setupenv.sh && pushd ${workspaceFolder}/examples/rtos/ && make && popd",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "kill gdb",
+            "type": "shell",
+            "command": "ps -e | grep arm-none-eabi-g | awk '{print $1}' | xargs kill -2; killall arm-none-eabi-gdb",
+        }
+    ]
+}
