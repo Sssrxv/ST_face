@@ -718,26 +718,24 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
 
     i2c_init(i2c_num, i2c_addr, 7, 350*1000);
 
-
     // exposure
     uint8_t itime_h;
     uint8_t itime_l;
     uint32_t exposure = (int)itime;
     if (exposure > MAX_EXPOSURE)
         exposure = MAX_EXPOSURE;
+    LOGE(__func__,"error exposure = %d", exposure);
+
     itime_l = exposure & 0xff;
     itime_h = (exposure >> 8) & 0xff;
-    
-    exposure = exposure << 8;
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3928, itime_l);
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3927, itime_h);
+
+    exposure = exposure << 4;
     itime_l = exposure & 0xff;
     itime_h = (exposure >> 8) & 0xff;
-    og01a1b_write_reg(i2c_num, i2c_addr, 0x3927, itime_l);
-    og01a1b_write_reg(i2c_num, i2c_addr, 0x3928, itime_h);
-
-
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3502, itime_l);
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h);
-
 
 
     // again
