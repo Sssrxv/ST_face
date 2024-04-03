@@ -721,10 +721,11 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     // exposure
     uint8_t itime_h;
     uint8_t itime_l;
-    uint32_t exposure = (int)itime;
+    uint32_t exposure = (int)itime; 
+    LOGI(__func__,"error exposure1 = %f", exposure);
+    LOGI(__func__,"again = %f", again);
     if (exposure > MAX_EXPOSURE)
         exposure = MAX_EXPOSURE;
-    LOGE(__func__,"error exposure = %d", exposure);
 
     itime_l = exposure & 0xff;
     itime_h = (exposure >> 8) & 0xff;

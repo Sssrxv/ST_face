@@ -20,6 +20,7 @@
   },
   "common" : {
     "led_timeout_ms_gpio": 90,
+    "init_itime":259,
     "enable_handler_upload_image": 1
   },
   "enroll" : {
