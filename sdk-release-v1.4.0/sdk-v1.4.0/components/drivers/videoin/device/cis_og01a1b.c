@@ -694,16 +694,20 @@ static int cis_og01a1b_get_interface_param(cis_dev_driver_t *dev_driver, cis_int
 static int cis_og01a1b_get_exposure_param(cis_dev_driver_t *dev_driver, cis_exposure_param_t *exp_param)
 {
     exp_param->min_again    = 1.0;
-    exp_param->max_again    = 248;
+    exp_param->max_again    = 8;
     exp_param->step_again   = 1;
 
     exp_param->min_dgain    = 1.0;
-    exp_param->max_dgain    = 15.0;
+    exp_param->max_dgain    = 1.0;
     exp_param->step_dgain   = 1.0;
 
     exp_param->min_itime    = 1.0;
     exp_param->max_itime    = MAX_EXPOSURE;
     exp_param->step_itime   = 1.0;
+
+    exp_param->initial_again    = 4.0;
+    exp_param->initial_dgain    = 1.0;
+    exp_param->initial_itime    = 10;
     return 0;
 }
 
@@ -712,7 +716,7 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     i2c_device_number_t i2c_num = dev_driver->i2c_num;
     uint8_t i2c_addr = dev_driver->i2c_tar_addr;
     // og01a1b_i2c_addr = SENSOR_ADDR_WR_MASTER;
-    float again = exp->again;
+    float again = exp->again*16;
     float dgain = exp->dgain;
     float itime = exp->itime;
 

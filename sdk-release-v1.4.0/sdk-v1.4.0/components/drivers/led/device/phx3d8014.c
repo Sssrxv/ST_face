@@ -729,12 +729,12 @@ static led_ops_t phx3d8014_led_ops = {
     .release = phx3d8014_release,
     .enable = phx3d8014_enable,
     .disable = phx3d8014_disable,
-    .suspend = phx3d8014_suspend,
-    .resume = phx3d8014_resume,
+    .suspend = phx3d8014_enable,
+    .resume = phx3d8014_enable,
     .get_current_range = phx3d8014_get_current_range_wrapper,
     .set_current = phx3d8014_set_current_wrapper,
     .set_timeout = phx3d8014_set_timeout_ms,
-    .trigger = phx3d8014_test,
+    .trigger = phx3d8014_flash_bright,
 };
 static phx3d8014_led_t led0 = {
     .i2c_num = I2C_DEVICE_1,
