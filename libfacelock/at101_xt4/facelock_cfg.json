@@ -19,6 +19,10 @@
     }
   },
   "common" : {
+    "min_again": 1,
+    "min_itime": 3,
+    "max_again": 8,
+    "max_itime": 1100,
     "led_timeout_ms_gpio": 90,
     "enable_handler_upload_image": 0
   },
