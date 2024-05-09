@@ -755,7 +755,7 @@ static led_trig_param_t trig_param = {
 };
 
 static led_dev_t phx3d8014 = {
-    .name = "phx3d8014",
+    .name = "lm3644",
     .ops = &phx3d8014_led_ops,
     .trig_param = &trig_param,      //
     .is_initialized = 0,
