@@ -106,7 +106,10 @@ const static phx3d8014_CONFIG_T gphx3d8014RegInitTbl[] = {
 {0x00, 0x10}, //ACC Mode ch1
 {0x40, 0x10}, //ACC Mode ch2
 {0x07, 0x00}, //ibias_fix_ch1
-{0x08, 0xc8}, //isw_fix_ch1 12.8mA*0x90=1843mA
+{0x08, 0x89}, //isw_fix_ch1 12.8mA*0x90=1843mA
+
+{0x11, 0xB4},
+{0x3C, 0xDE},
 
 {0x47, 0x00}, //ibias_fix_ch2
 
@@ -466,6 +469,14 @@ int phx3d8014_enable(led_dev_t *dev)
 /* =================================================================================== */
 int phx3d8014_disable(led_dev_t *dev)
 {
+    /* 读一下此时补光灯的两个特殊寄存器 */
+    uint8_t rst;
+    rst = phx3d8014_readReg(1, 0x11);
+    LOGI(TAG, "register0x11: %d", rst);
+
+    rst = phx3d8014_readReg(1, 0x3C);
+    LOGI(TAG, "register0x3c: %d", rst);
+
     pwm_set_enable(m_pwm_dev, 0);
     return 0;
 }
