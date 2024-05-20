@@ -467,7 +467,11 @@ int phx3d8014_set_flash_timeout_ms(led_dev_t *dev, int timeout_ms)
 int phx3d8014_enable(led_dev_t *dev)
 {
     cis_context_t* context = m_dev_driver->context;
+    /* 重新输出strobe */
     context->strobe_ctrl(m_dev_driver, 1);
+
+    aiva_busy_delay_us(200);
+    
     pwm_set_enable(m_pwm_dev, 1);
     return 0;
 }
@@ -475,7 +479,6 @@ int phx3d8014_enable(led_dev_t *dev)
 int phx3d8014_disable(led_dev_t *dev)
 {
     cis_context_t* context = m_dev_driver->context;
-    context->strobe_ctrl(m_dev_driver, 1);
     /* 读一下此时补光灯的两个特殊寄存器 */
     uint8_t rst;
     rst = phx3d8014_readReg(1, 0x11);
@@ -484,6 +487,8 @@ int phx3d8014_disable(led_dev_t *dev)
     rst = phx3d8014_readReg(1, 0x3C);
     LOGI(TAG, "register0x3c: %d", rst);
 
+    /* 停止输出strobe */
+    context->strobe_ctrl(m_dev_driver, 0);
     pwm_set_enable(m_pwm_dev, 0);
     return 0;
 }

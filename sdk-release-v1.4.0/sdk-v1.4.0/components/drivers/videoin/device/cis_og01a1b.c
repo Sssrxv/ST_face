@@ -795,10 +795,38 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
 
 static int cis_strobe_ctrl(cis_dev_driver_t *dev_driver, int strobe_enable)
 {
+    uint8_t i2c_num = dev_driver->i2c_num;
+    uint8_t ret;
+    uint16_t sensor1_val = 0;
+    uint16_t sensor2_val = 0;
     if (strobe_enable) {
+        ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
+        LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
+        /* 将第四位置1 */
+        sensor1_val |=  (1 << 3);
+
+        ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
+        LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
+        /* 将第四位置1 */
+        sensor2_val |= (1 << 3);
+
+        og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
+        og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
         LOGI("", "enable strobe.");
     }
     else {
+        ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
+        LOGD(TAG, "cis_ov01a1b_sleep sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
+        /* 将第四位置0 */
+        sensor1_val &=  ~(1 << 3);
+
+        ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
+        LOGD(TAG, "cis_ov01a1b_sleep sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
+        /* 将第四位置0 */
+        sensor2_val &= ~(1 << 3);
+
+        og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
+        og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
         LOGI("", "disable strobe.");
     }
 
