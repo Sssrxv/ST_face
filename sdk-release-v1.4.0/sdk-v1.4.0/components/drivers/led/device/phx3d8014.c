@@ -10,6 +10,7 @@
 #include <math.h>
 #include "udevice.h"
 #include "pwm.h"
+#include "cis_dev_driver.h"
 
 
 /* =================================================================================== */
@@ -125,6 +126,8 @@ static uint8_t gphx3d8014InitFlag = 0;
 static uint8_t gStrobeEnable = 0;
 static uint8_t gLedEnable[] = {0, 0};
 static pwm_device_number_t m_pwm_dev = PWM_DEVICE_1;
+
+static cis_dev_driver_t* m_dev_driver = NULL;
 
 static int gSuspendFlag = 0;
 /* =================================================================================== */
@@ -463,12 +466,16 @@ int phx3d8014_set_flash_timeout_ms(led_dev_t *dev, int timeout_ms)
 /* =================================================================================== */
 int phx3d8014_enable(led_dev_t *dev)
 {
+    cis_context_t* context = m_dev_driver->context;
+    context->strobe_ctrl(m_dev_driver, 1);
     pwm_set_enable(m_pwm_dev, 1);
     return 0;
 }
 /* =================================================================================== */
 int phx3d8014_disable(led_dev_t *dev)
 {
+    cis_context_t* context = m_dev_driver->context;
+    context->strobe_ctrl(m_dev_driver, 1);
     /* 读一下此时补光灯的两个特殊寄存器 */
     uint8_t rst;
     rst = phx3d8014_readReg(1, 0x11);
@@ -628,6 +635,18 @@ int phx3d8014_flash_bright(led_dev_t *dev)                                /** tr
     return 0;
 }
 
+static int init_cis_context(const char* dev_name)
+{
+    struct udevice *dev_pp = NULL;
+    int ret = device_find_by_id_name(UCLASS_CIS_MIPI, dev_name, &dev_pp);
+    if (ret == 0 && dev_pp) {
+        LOGI("", "find cis sensor context.");
+        m_dev_driver = (cis_dev_driver_t *)(dev_pp->driver);
+        return ret;
+    }
+    return ret;
+}
+
 int phx3d8014_test(led_dev_t *dev)//(i2c_device_number_t i2c_num, uint8_t pin, bool gpio_control)
 {    
     uint8_t deviceId = 0;
@@ -643,6 +662,8 @@ int phx3d8014_test(led_dev_t *dev)//(i2c_device_number_t i2c_num, uint8_t pin, b
     // LOGI(TAG, "phx3d8014_test");
     
     //phx3d8014_pwm_init();
+
+    init_cis_context("og01a1b_dev2");
 
     phx3d8014_init(dev);
 

@@ -610,45 +610,45 @@ static int cis_og01a1b_init_slave(cis_dev_driver_t *dev_driver)
 
 static int cis_ov01a1b_wake(cis_dev_driver_t *dev_driver)
 {
-    uint8_t i2c_num = dev_driver->i2c_num;
-    uint8_t ret;
-    uint16_t sensor1_val = 0;
-    uint16_t sensor2_val = 0;
+    // uint8_t i2c_num = dev_driver->i2c_num;
+    // uint8_t ret;
+    // uint16_t sensor1_val = 0;
+    // uint16_t sensor2_val = 0;
     
-    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
-    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
-    /* 将第四位置1 */
-    sensor1_val |=  (1 << 3);
+    // ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
+    // LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
+    // /* 将第四位置1 */
+    // sensor1_val |=  (1 << 3);
 
-    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
-    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
-    /* 将第四位置1 */
-    sensor2_val |= (1 << 3);
+    // ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
+    // LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
+    // /* 将第四位置1 */
+    // sensor2_val |= (1 << 3);
 
-    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
-    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
+    // og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
+    // og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
     return 0;
 }
 
 static int cis_ov01a1b_sleep(cis_dev_driver_t *dev_driver)
 {
-    uint8_t i2c_num = dev_driver->i2c_num;
-    uint8_t ret;
-    uint16_t sensor1_val = 0;
-    uint16_t sensor2_val = 0;
+    // uint8_t i2c_num = dev_driver->i2c_num;
+    // uint8_t ret;
+    // uint16_t sensor1_val = 0;
+    // uint16_t sensor2_val = 0;
 
-    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
-    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
-    /* 将第四位置0 */
-    sensor1_val &=  ~(1 << 3);
+    // ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
+    // LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
+    // /* 将第四位置0 */
+    // sensor1_val &=  ~(1 << 3);
 
-    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
-    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
-    /* 将第四位置0 */
-    sensor2_val &= ~(1 << 3);
+    // ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
+    // LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
+    // /* 将第四位置0 */
+    // sensor2_val &= ~(1 << 3);
 
-    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
-    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
+    // og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
+    // og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
     return 0;
 }
 
@@ -793,6 +793,22 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     return 0;
 }
 
+static int cis_strobe_ctrl(cis_dev_driver_t *dev_driver, int strobe_enable)
+{
+    if (strobe_enable) {
+        LOGI("", "enable strobe.");
+    }
+    else {
+        LOGI("", "disable strobe.");
+    }
+
+    return 0;
+}
+
+static cis_context_t cis_context = {
+    .strobe_ctrl = cis_strobe_ctrl
+};
+
 static int cis_og01a1b_get_resolution(cis_dev_driver_t *dev_driver, cis_frame_param_t *param)
 {
     param->width = W_VGA;
@@ -809,7 +825,7 @@ static cis_dev_driver_t og01a1b_dev0 = {
     .power_pin              = GPIO_PIN2,
     .reset_pin              = GPIO_PIN2,
     .mclk_id                = CIS_MCLK_ID_MCLK0,
-    .context                = NULL,
+    .context                = &cis_context,
     .init                   = cis_og01a1b_init,
     .start_stream           = cis_og01a1b_start_stream,
     .stop_stream            = cis_og01a1b_stop_stream,
@@ -831,7 +847,7 @@ static cis_dev_driver_t og01a1b_dev1 = {
     .power_pin              = GPIO_PIN2,
     .reset_pin              = GPIO_PIN2,
     .mclk_id                = CIS_MCLK_ID_MCLK1,
-    .context                = NULL,
+    .context                = &cis_context,
     .init                   = cis_og01a1b_init_slave,
     .start_stream           = cis_og01a1b_start_stream,
     .stop_stream            = cis_og01a1b_stop_stream,
@@ -857,7 +873,7 @@ static cis_dev_driver_t og01a1b_dev2 = {
     .mclk_freq              = 24 * 1000 * 1000,
     .fps                    = 30,
     .mf_mode                = 0,
-    .context                = NULL,
+    .context                = &cis_context,
     .init                   = cis_og01a1b_init_master,
     .start_stream           = cis_og01a1b_start_stream,
     .stop_stream            = cis_og01a1b_stop_stream,

@@ -209,6 +209,11 @@ typedef struct cis_dev_driver {
     int  (*get_frame_parameter)(struct cis_dev_driver *dev_driver, cis_frame_param_t *param);
 } cis_dev_driver_t;
 
+typedef struct 
+{
+    int (*strobe_ctrl)(cis_dev_driver_t *dev_driver, int enable_strobe);
+} cis_context_t;
+
 /** 
  * @brief  Find cis device driver by device name string
  * 
