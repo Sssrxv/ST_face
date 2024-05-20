@@ -608,13 +608,47 @@ static int cis_og01a1b_init_slave(cis_dev_driver_t *dev_driver)
     return 0;
 }
 
-static int cis_ov01a1b_wake()
+static int cis_ov01a1b_wake(cis_dev_driver_t *dev_driver)
 {
+    uint8_t i2c_num = dev_driver->i2c_num;
+    uint8_t ret;
+    uint16_t sensor1_val = 0;
+    uint16_t sensor2_val = 0;
+    
+    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
+    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
+    /* 将第四位置1 */
+    sensor1_val |=  (1 << 3);
+
+    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
+    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
+    /* 将第四位置1 */
+    sensor2_val |= (1 << 3);
+
+    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
+    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
     return 0;
 }
 
-static int cis_ov01a1b_sleep()
+static int cis_ov01a1b_sleep(cis_dev_driver_t *dev_driver)
 {
+    uint8_t i2c_num = dev_driver->i2c_num;
+    uint8_t ret;
+    uint16_t sensor1_val = 0;
+    uint16_t sensor2_val = 0;
+
+    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, &sensor1_val); 
+    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor1_val);
+    /* 将第四位置0 */
+    sensor1_val &=  ~(1 << 3);
+
+    ret = og01a1b_read_reg(dev_driver->i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, &sensor1_val); 
+    LOGD(TAG, "cis_ov01a1b_wake sensor1: readed 0x3006 addr  is 0x%x", sensor2_val);
+    /* 将第四位置0 */
+    sensor2_val &= ~(1 << 3);
+
+    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_MASTER, 0x3006, sensor1_val);
+    og01a1b_write_reg(i2c_num, SENSOR_ADDR_WR_SLAVE, 0x3006, sensor2_val);
     return 0;
 }
 
