@@ -15,15 +15,6 @@ all: elf bin img rom
 INC_APP_DIR  += -I$(PROJ_ROOT)
 SOURCE_APP_C += $(PROJ_ROOT)/rtos_example.c
 
-# libfacelock
-INC_APP_DIR  += -I$(PROJ_ROOT)/../../lib/libfacelock
-INC_APP_DIR  += -I$(PROJ_ROOT)/../../lib
-
-# libfacelock
-DEPEND_LIBS  += $(PROJ_ROOT)/../../lib/libfacelock/libfacelock.a
-
-SOURCE_APP_C += $(PROJ_ROOT)/../../lib/libfacelock/facelock_sdk_test.c
-
 .PHONY: rom
 rom: $(BIN_DIR)/$(TARGET_ROM_NOR)
 

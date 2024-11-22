@@ -13,9 +13,6 @@
 #include "FreeRTOS_POSIX/fcntl.h"
 #include "FreeRTOS_POSIX/errno.h"
 
-#include "facelock_sdk.h"
-#include "facelock_sdk_test.h"
-
 static pthread_t tid1;
 static pthread_t tid2;
 
@@ -23,14 +20,12 @@ static void* thread1_entry(void* parameter)
 {
     (void)parameter;
     int cnt = 0;
-    // while (cnt < 10) {
-    //     LOGD(__func__, "thread1 run cnt = %d ...", cnt);
-    //     cnt++;
-    //     /* sleep 2 seconds*/
-    //     sleep(2);
-    // }
-
-    facelock_sdk_uart_mode_test_entry();
+    while (cnt < 10) {
+        LOGD(__func__, "thread1 run cnt = %d ...", cnt);
+        cnt++;
+        /* sleep 2 seconds*/
+        sleep(2);
+    }
 
     return NULL;
 }
@@ -68,10 +63,10 @@ int my_app_entry(void)
         LOGE(__func__, "Create tid1 fail!");
     }
 
-    // result = pthread_create(&tid2, NULL, thread2_entry, NULL);
-    // if (result < 0) {
-    //     LOGE(__func__, "Create tid2 fail!");
-    // }
+    result = pthread_create(&tid2, NULL, thread2_entry, NULL);
+    if (result < 0) {
+        LOGE(__func__, "Create tid2 fail!");
+    }
 
     return result;
 }

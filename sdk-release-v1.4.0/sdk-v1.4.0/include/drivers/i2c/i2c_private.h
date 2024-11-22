@@ -125,9 +125,11 @@ typedef struct _i2c
 /* I2C Rx/Tx Data Buffer and Command Register*/
 #define I2C_DATA_CMD_CMD                        0x00000100U
 #define I2C_DATA_CMD_STOP                       (1U << 9)
+#define I2C_DATA_CMD_RESTART                    (1U << 10)
 #define I2C_DATA_CMD_DATA_MASK                  0x000000FFU
 #define I2C_DATA_CMD_DATA(x)                    ((x) << 0)
 #define I2C_DATA_CMD_DATA_STOP(x)               (I2C_DATA_CMD_STOP |(x)) 
+#define I2C_DATA_CMD_DATA_RESTART(x)            (I2C_DATA_CMD_RESTART |(x)) 
 
 /* Standard Speed I2C Clock SCL High Count Register*/
 #define I2C_SS_SCL_HCNT_COUNT_MASK              0x0000FFFFU

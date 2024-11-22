@@ -10,8 +10,8 @@ extern "C" {
 /*static const uint32_t NOR_FLASH_CLK_RATE  = 50*1000*1000;*/
 //static const uint32_t NAND_FLASH_CLK_RATE = 50*1000*1000;
 
-static const uint32_t NOR_FLASH_CLK_RATE  = 80*1000*1000;
-static const uint32_t NAND_FLASH_CLK_RATE = 80*1000*1000;
+static const uint32_t NOR_FLASH_CLK_RATE  = 100*1000*1000;
+static const uint32_t NAND_FLASH_CLK_RATE = 100*1000*1000;
 
 #ifdef __cplusplus
 }

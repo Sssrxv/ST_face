@@ -7,22 +7,34 @@
 #include "syslog.h"
 #include "udevice.h"
 #include "aiva_sleep.h"
+#include "atomic.h"
+
+// ov9284
 
 #define SENSOR_ADDR_WR_MASTER               (0xc0 >> 1) 
-#define SENSOR_ADDR_WR_SLAVE                (0x20 >> 1) //0x6c
+#define SENSOR_ADDR_WR_SLAVE                (0x20 >> 1)
 
+#define MONO_CAMERA_ENABLE      (1)
+#define STEREO_CAMERA_ENABLE    (0)
 #define TAG                      "cis_og01a1b"
 
+#if MONO_CAMERA_ENABLE
+#define W_VGA                    (640)
+#define H_VGA                    (480)
+#else
 #define W_VGA                    (1280)
 #define H_VGA                    (800)
+#endif
 
 #define REG_DLY                  (0xffff)
 
 // #define OUT_PUT_SIZE           og01a1b_1280_1024
 // frame length is set by {0x380E, 0x380F}
 // maximum exposure time is frame length - 14
-// #define MAX_EXPOSURE (1818 - 25)
-#define MAX_EXPOSURE 259
+#define MAX_EXPOSURE    (641 - 14)
+#define MAX_AGAIN       (0xf8)
+#define MAX_DGAIN       (0x1)
+
 
 
 typedef struct _og01a1b_REG_T {
@@ -40,6 +52,7 @@ static og01a1b_REG_T og01a1b_stop_regs[] __ATTR_ALIGN__(32) = {
     {0x0100, 0x00},
 };
 
+#if STEREO_CAMERA_ENABLE
 static const og01a1b_REG_T og01a1b_common_regs[] __ATTR_ALIGN__(32) = {
 {0x0103, 0x01},
 
@@ -177,6 +190,136 @@ static const og01a1b_REG_T og01a1b_common_regs[] __ATTR_ALIGN__(32) = {
 {0x3502, 0x00},
 
 };
+#endif
+
+#if MONO_CAMERA_ENABLE
+static const og01a1b_REG_T og01a1b_common_regs[] __ATTR_ALIGN__(32) = {
+{0x0103, 0x01},
+{0x0106, 0x00},
+{0x0302, 0x32},
+{0x030d, 0x50},
+{0x030e, 0x02},
+{0x3001, 0x00},
+{0x3004, 0x00},
+{0x3005, 0x00},
+{0x3006, 0x04},
+{0x3011, 0x0a},
+{0x3013, 0x18},
+{0x301c, 0xf0},
+{0x3022, 0x01},
+{0x3030, 0x10},
+{0x3039, 0x32},
+{0x303a, 0x00},
+{0x3500, 0x00},
+{0x3501, 0x2a},
+{0x3502, 0x90},
+{0x3503, 0x08},
+{0x3505, 0x8c},
+{0x3507, 0x03},
+{0x3508, 0x00},
+{0x3509, 0x70}, // 0x70
+{0x3610, 0x80},
+{0x3611, 0xa0},
+{0x3620, 0x6e},
+{0x3632, 0x56},
+{0x3633, 0x78},
+{0x3662, 0x01},
+{0x3666, 0x00},
+
+{0x366f, 0x5a},
+{0x3680, 0x84},
+{0x3707, 0x56},
+{0x370d, 0x00},
+{0x370e, 0xfa},
+{0x3712, 0x80},
+{0x372d, 0x22},
+{0x3731, 0x80},
+{0x3732, 0x30},
+{0x3778, 0x00},
+{0x377d, 0x22},
+{0x3788, 0x02},
+{0x3789, 0xa4},
+{0x378a, 0x00},
+{0x378b, 0x4a},
+{0x3799, 0x20},
+{0x379c, 0x01},
+{0x3800, 0x00},
+{0x3801, 0x00},
+{0x3802, 0x00},
+{0x3803, 0x00},
+{0x3804, 0x05},
+{0x3805, 0x0f},
+{0x3806, 0x03},
+{0x3807, 0x2f},
+{0x3808, 0x02}, // ;05
+{0x3809, 0x80}, // ;00
+{0x380a, 0x01}, // ;03
+{0x380b, 0xe0}, // ;20
+{0x380c, 0x02},
+{0x380d, 0xd8},
+{0x380e, 0x1C},
+{0x380f, 0x70},
+{0x3810, 0x01},
+{0x3811, 0x48},
+{0x3812, 0x00},
+{0x3813, 0x58},
+{0x3814, 0x11},
+{0x3815, 0x11},
+{0x3820, 0x40},
+{0x3821, 0x00},
+{0x382b, 0x3a},
+{0x382c, 0x06},
+{0x382d, 0xc2},
+{0x389d, 0x00},
+{0x3881, 0x42},
+{0x3882, 0x02},
+{0x3883, 0x12},
+{0x3885, 0x07},
+{0x38a8, 0x02},
+{0x38a9, 0x80},
+{0x38b1, 0x03},
+{0x38b3, 0x07},
+{0x38c4, 0x00},
+{0x38c5, 0xc0},
+{0x38c6, 0x04},
+{0x38c7, 0x80},
+{0x3920, 0xff},
+{0x4003, 0x40},
+{0x4008, 0x04},
+{0x4009, 0x0b},
+{0x400c, 0x01},
+{0x400d, 0x07},
+{0x4010, 0xf0},
+{0x4011, 0x3b},
+{0x4043, 0x40},
+{0x4307, 0x30},
+{0x4317, 0x00},
+{0x4501, 0x00},
+{0x4507, 0x00},
+{0x4509, 0x00},
+{0x450a, 0x08},
+{0x4601, 0x04},
+{0x470f, 0x00},
+{0x4f07, 0x00},
+{0x4800, 0x00},
+{0x4837, 0x14},
+{0x5000, 0x9f},
+{0x5001, 0x00},
+{0x5e00, 0x00},
+{0x5d00, 0x07},
+{0x5d01, 0x00},
+{0x4f00, 0x0c},
+{0x4f10, 0x00},
+{0x4f11, 0x88},
+{0x4f12, 0x0f},
+{0x4f13, 0xc4},
+
+{0x3501, 0x37},
+{0x3502, 0x50},
+{0x0100, 0x01},
+};
+#endif
+
 // // Master
 static const og01a1b_REG_T og01a1b_master_regs[] __ATTR_ALIGN__(32) = {
 {0x3006, 0x06},  //02 02 ;enable FSIN output, bit operation, set 0x3006[1]=1
@@ -231,8 +374,8 @@ static const og01a1b_REG_T og01a1b_strobe_regs[] __ATTR_ALIGN__(32) = {
 // {0x3928, 0x80},//
 {0x3925, 0x00},
 {0x3926, 0x00},
-{0x3927, 0x01},
-{0x3928, 0x03},
+{0x3927, 0x03},
+{0x3928, 0x32},
 /****************************************************************************************/
 
 {0x392b, 0x00},//
@@ -247,18 +390,20 @@ static const og01a1b_REG_T og01a1b_strobe_regs[] __ATTR_ALIGN__(32) = {
 {0x38b3, 0x07},//
 {0x3885, 0x07},//
 {0x382b, 0x5a},//
-{0x3670, 0x68},//Z
+{0x3670, 0x68},//
 {0x3208, 0x00},//
 
 /*****************************目前一个t-lin为36.6666667us,曝光时间是30ms,30000/t-lin =818***************************************************/
 // {0x3501, 0x12},//;texposure
 // {0x3502, 0x40},//;texposure
-{0x3501, 0x10},//;texposure
-{0x3502, 0x30},//;texposure
+{0x3501, 0x33},//;texposure
+{0x3502, 0x20},//;texposure
 /**************************************************************************************************************************************/
 
 {0x3508, 0x00},//;gain
 {0x3509, 0x10},//;gain
+{0x3927, 0x01},//
+{0x3928, 0x24},//
 {0x3929, 0x05},//;VTS-Texposure-7=71a-124-7=5ef
 {0x392a, 0xef},//;VTS-Texposure-7=71a-124-7=5ef
 {0x3208, 0x10},//
@@ -290,8 +435,8 @@ static const og01a1b_REG_T og01a1b_strobe_regs1[] __ATTR_ALIGN__(32) = {
 // {0x3928, 0x80},//
 {0x3925, 0x00},
 {0x3926, 0x00},
-{0x3927, 0x01},
-{0x3928, 0x03},
+{0x3927, 0x03},
+{0x3928, 0x32},
 /****************************************************************************************/
 
 {0x392b, 0x00},//
@@ -312,12 +457,14 @@ static const og01a1b_REG_T og01a1b_strobe_regs1[] __ATTR_ALIGN__(32) = {
 /*****************************目前一个t-lin为36.6666667us,曝光时间是30ms,30000/t-lin =818***************************************************/
 // {0x3501, 0x12},//;texposure
 // {0x3502, 0x40},//;texposure
-{0x3501, 0x10},//;texposure
-{0x3502, 0x30},//;texposure
+{0x3501, 0x33},//;texposure
+{0x3502, 0x20},//;texposure
 /**************************************************************************************************************************************/
 
 {0x3508, 0x00},//;gain
 {0x3509, 0x10},//;gain
+{0x3927, 0x01},//
+{0x3928, 0x24},//
 {0x3929, 0x05},//;VTS-Texposure-7=71a-124-7=5ef
 {0x392a, 0xef},//;VTS-Texposure-7=71a-124-7=5ef
 {0x3208, 0x10},//
@@ -338,6 +485,9 @@ static int og01a1b_write_reg(int i2c_num, uint8_t i2c_addr, uint16_t reg_addr, u
     data_buf[1] = (reg_addr >> 0) & 0xff;
     data_buf[2] = reg_val;
     ret = i2c_send_data(i2c_num, i2c_addr, data_buf, 3);
+    if(ret != 0) {
+        LOGE("0g01a1b", "i2c:%d, addr:0x%x, write reg:0x%x, val:0x%x. failed.", i2c_num, i2c_addr, reg_addr, reg_val);
+    }
 
     return ret;
 }
@@ -479,6 +629,7 @@ static int og01a1b_vga_init(int i2c_num, uint8_t i2c_addr)
 
 static int cis_og01a1b_init(cis_dev_driver_t *dev_driver)
 {
+    // LOGI("", "Use SDK og01a1b sensor driver.");
     // enable sensor mclk
     if (dev_driver->mclk_id == CIS_MCLK_ID_MCLK0) 
     {
@@ -507,16 +658,12 @@ static int cis_og01a1b_init_master(cis_dev_driver_t *dev_driver)
     uint8_t i,result;
     int8_t ret;
 
-    // dev_driver->i2c_num = I2C_DEVICE_2;
-    // gpio_set_drive_mode(GPIO_PIN2, GPIO_DM_INPUT);//GPIO2 to input
-    //og01a1b_i2c_addr = SENSOR_ADDR_WR_MASTER;
-    // og01a1b_i2c_addr = SENSOR_ADDR_WR_SLAVE;
     // enable sensor mclk
     if (dev_driver->mclk_id == CIS_MCLK_ID_MCLK0) {
-        sysctl_set_sens_mclk(MCLK_ID0, 27*1000*1000);
+        sysctl_set_sens_mclk(MCLK_ID0, dev_driver->mclk_freq);
         sysctl_set_io_switch(IO_SWITCH_MCLK0, 1);
     } else if (dev_driver->mclk_id == CIS_MCLK_ID_MCLK1) {
-        sysctl_set_sens_mclk(MCLK_ID1, 27*1000*1000);
+        sysctl_set_sens_mclk(MCLK_ID1, dev_driver->mclk_freq);
         sysctl_set_io_switch(IO_SWITCH_MCLK1, 1);
     } else {
         LOGE(TAG, "master invalid mclk id: %d\n", dev_driver->mclk_id);
@@ -558,15 +705,12 @@ static int cis_og01a1b_init_slave(cis_dev_driver_t *dev_driver)
     LOGI(TAG, "cis_og01a1b_init_slave\n");
     uint8_t i2c_addr = dev_driver->i2c_tar_addr;
 
-    // dev_driver->i2c_num = I2C_DEVICE_2;
-    // og01a1b_i2c_addr = SENSOR_ADDR_WR_MASTER;
-    // gpio_set_drive_mode(GPIO_PIN2, GPIO_DM_INPUT);//GPIO2 to input
     // enable sensor mclk
     if (dev_driver->mclk_id == CIS_MCLK_ID_MCLK0) {
-        sysctl_set_sens_mclk(MCLK_ID0, 27*1000*1000);
+        sysctl_set_sens_mclk(MCLK_ID0, dev_driver->mclk_freq);
         sysctl_set_io_switch(IO_SWITCH_MCLK0, 1);
     } else if (dev_driver->mclk_id == CIS_MCLK_ID_MCLK1) {
-        sysctl_set_sens_mclk(MCLK_ID1, 27*1000*1000);
+        sysctl_set_sens_mclk(MCLK_ID1, dev_driver->mclk_freq);
         sysctl_set_io_switch(IO_SWITCH_MCLK1, 1);
     } else {
         LOGE(TAG, "slave invalid mclk id: %d\n", dev_driver->mclk_id);
@@ -644,7 +788,6 @@ static int cis_og01a1b_stop_stream(cis_dev_driver_t *dev_driver)
 
     int i2c_num = dev_driver->i2c_num;
     int i2c_addr = dev_driver->i2c_tar_addr;
-
     reg_list = og01a1b_stop_regs;
     cnt     = AIVA_ARRAY_LEN(og01a1b_stop_regs);
     ret     = og01a1b_program_regs(i2c_num, i2c_addr, reg_list, cnt);
@@ -683,7 +826,12 @@ static void cis_og01a1b_reset(cis_dev_driver_t *dev_driver)
 static int cis_og01a1b_get_interface_param(cis_dev_driver_t *dev_driver, cis_interface_param_t *param)
 {
     param->interface_type                   = CIS_INTERFACE_TYPE_MIPI;
+#if MONO_CAMERA_ENABLE
+    param->mipi_param.freq                  = 800;
+#endif
+#if STEREO_CAMERA_ENABLE
     param->mipi_param.freq                  = 512;
+#endif
     param->mipi_param.lane_num              = 1;
     param->mipi_param.vc_num                = 1;
     param->mipi_param.virtual_channels[0]   = MIPI_VIRTUAL_CHANNEL_0;
@@ -694,20 +842,16 @@ static int cis_og01a1b_get_interface_param(cis_dev_driver_t *dev_driver, cis_int
 static int cis_og01a1b_get_exposure_param(cis_dev_driver_t *dev_driver, cis_exposure_param_t *exp_param)
 {
     exp_param->min_again    = 1.0;
-    exp_param->max_again    = 8;
+    exp_param->max_again    = MAX_AGAIN;
     exp_param->step_again   = 1;
 
     exp_param->min_dgain    = 1.0;
-    exp_param->max_dgain    = 1.0;
+    exp_param->max_dgain    = MAX_DGAIN;
     exp_param->step_dgain   = 1.0;
 
     exp_param->min_itime    = 1.0;
     exp_param->max_itime    = MAX_EXPOSURE;
     exp_param->step_itime   = 1.0;
-
-    exp_param->initial_again    = 4.0;
-    exp_param->initial_dgain    = 1.0;
-    exp_param->initial_itime    = 10;
     return 0;
 }
 
@@ -716,11 +860,14 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     i2c_device_number_t i2c_num = dev_driver->i2c_num;
     uint8_t i2c_addr = dev_driver->i2c_tar_addr;
     // og01a1b_i2c_addr = SENSOR_ADDR_WR_MASTER;
-    float again = exp->again*16;
+    float again = exp->again;
     float dgain = exp->dgain;
     float itime = exp->itime;
 
+    LOGI("set exp", "again:%f, dgain:%f, item:%f.", again, dgain, itime);
+
     i2c_init(i2c_num, i2c_addr, 7, 350*1000);
+
 
     // exposure
     uint8_t itime_h;
@@ -728,24 +875,15 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     uint32_t exposure = (int)itime;
     if (exposure > MAX_EXPOSURE)
         exposure = MAX_EXPOSURE;
-    LOGE(__func__,"error exposure = %d", exposure);
-
-    itime_l = exposure & 0xff;
-    itime_h = (exposure >> 8) & 0xff;
-    og01a1b_write_reg(i2c_num, i2c_addr, 0x3928, itime_l);
-    og01a1b_write_reg(i2c_num, i2c_addr, 0x3927, itime_h);
-
-    exposure = exposure << 4;
     itime_l = exposure & 0xff;
     itime_h = (exposure >> 8) & 0xff;
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3502, itime_l);
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h);
 
-
     // again
     uint8_t again_coarse = (int)again;
-    if (again_coarse > 0xf8)
-        again_coarse = 0xf8;
+    if (again_coarse > MAX_AGAIN)
+        again_coarse = MAX_AGAIN;
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3509, again_coarse);
 
 
@@ -774,6 +912,7 @@ static cis_dev_driver_t og01a1b_dev0 = {
     .power_pin              = GPIO_PIN2,
     .reset_pin              = GPIO_PIN2,
     .mclk_id                = CIS_MCLK_ID_MCLK0,
+    .mclk_freq              = 24 * 1000 * 1000,
     .context                = NULL,
     .init                   = cis_og01a1b_init,
     .start_stream           = cis_og01a1b_start_stream,
@@ -796,6 +935,7 @@ static cis_dev_driver_t og01a1b_dev1 = {
     .power_pin              = GPIO_PIN2,
     .reset_pin              = GPIO_PIN2,
     .mclk_id                = CIS_MCLK_ID_MCLK1,
+    .mclk_freq              = 24 * 1000 * 1000,
     .context                = NULL,
     .init                   = cis_og01a1b_init_slave,
     .start_stream           = cis_og01a1b_start_stream,
@@ -823,7 +963,7 @@ static cis_dev_driver_t og01a1b_dev2 = {
     .fps                    = 30,
     .mf_mode                = 0,
     .context                = NULL,
-    .init                   = cis_og01a1b_init_master,
+    .init                   = cis_og01a1b_init,
     .start_stream           = cis_og01a1b_start_stream,
     .stop_stream            = cis_og01a1b_stop_stream,
     .wake                   = cis_ov01a1b_wake,

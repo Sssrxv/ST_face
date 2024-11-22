@@ -106,11 +106,11 @@ const static phx3d8014_CONFIG_T gphx3d8014RegInitTbl[] = {
 {0x00, 0x10}, //ACC Mode ch1
 {0x40, 0x10}, //ACC Mode ch2
 {0x07, 0x00}, //ibias_fix_ch1
-{0x08, 0xc8}, //isw_fix_ch1 12.8mA*0x90=1843mA
+{0x08, 0x90}, //isw_fix_ch1 12.8mA*0x90=1843mA
 
 {0x47, 0x00}, //ibias_fix_ch2
 
-{0x48, 0xc8}, //isw_fix_ch2
+{0x48, 0x29}, //isw_fix_ch2
 {0x7F, 0x08}  //adc reset 
 };
 
@@ -239,7 +239,7 @@ int phx3d8014_init_test()
     }
     else
     {
-        LOGI(TAG, "IIC success new");
+        LOGI(TAG, "IIC success");
     }
     aiva_msleep(100);
 
@@ -284,7 +284,7 @@ int phx3d8014_init(led_dev_t *dev)
     uint8_t ret;
 
     if(gphx3d8014InitFlag) {
-        LOGW(TAG, "phx3d8014 has been inited test!");
+        LOGW(TAG, "phx3d8014 has been inited!");
         return 0;
     }
 
@@ -299,7 +299,7 @@ int phx3d8014_init(led_dev_t *dev)
     // // gpio_set_pin(pin, GPIO_PV_LOW);
     // // aiva_msleep(50);
     // aiva_msleep(10);
-    LOGI(TAG, "phx3d8014 begin new");
+    LOGI(TAG, "phx3d8014 begin");
    
     i2c_init(i2c_num, _dev->i2c_addr, 7, _dev->i2c_clk);
 
@@ -479,15 +479,12 @@ int phx3d8014_suspend(led_dev_t *dev)
 {
     gSuspendFlag = 1;
     dev->is_suspend = 1;
-    phx3d8014_led_t* _dev = (phx3d8014_led_t*)dev->priv;
-    i2c_device_number_t i2c_num = _dev->i2c_num;
     //phx3d8014 only support LD0
     // if (gLedEnable[0])
     // {
     //     phx3d8014_disable(0);
     // }
     // LOGI(TAG, "phx3d8014_suspend\r\n");
-    i2c_init(i2c_num, _dev->i2c_addr, 7, _dev->i2c_clk);
     if (gphx3d8014InitFlag) {
         uint8_t rst = phx3d8014_readReg(phx3d8014_IIC_NUM, phx3d8014_REG_ADDR00);
         rst |= 0x01;
@@ -507,7 +504,6 @@ int phx3d8014_resume(led_dev_t *dev)
 
     gSuspendFlag = 0;
     dev->is_suspend = 0;
-    i2c_init(i2c_num, _dev->i2c_addr, 7, _dev->i2c_clk);
     phx3d8014_set_current(LED_0, phx3d8014_CURRENT_CFG);
     // if (gLedEnable[0])
     // {
@@ -617,6 +613,8 @@ int phx3d8014_flash_bright(led_dev_t *dev)                                /** tr
     return 0;
 }
 
+
+
 int phx3d8014_test(led_dev_t *dev)//(i2c_device_number_t i2c_num, uint8_t pin, bool gpio_control)
 {    
     uint8_t deviceId = 0;
@@ -631,14 +629,10 @@ int phx3d8014_test(led_dev_t *dev)//(i2c_device_number_t i2c_num, uint8_t pin, b
     // LOGI(TAG, "slave id is : %d\n", phx3d8014_SLAVE_ADDR);
     // LOGI(TAG, "phx3d8014_test");
     
-    //phx3d8014_pwm_init();
+    phx3d8014_pwm_init();
 
     phx3d8014_init(dev);
 
-    if(dev->is_initialized == 1) {
-        return 0;
-    }
-    phx3d8014_pwm_init();
     rst = phx3d8014_get_detection(i2c_num);
     LOGI(TAG, "register11-: %d", rst);
 
@@ -650,8 +644,8 @@ int phx3d8014_test(led_dev_t *dev)//(i2c_device_number_t i2c_num, uint8_t pin, b
     // phx3d8014_WriteReg(i2c_num, phx3d8014_REG_ADDR02, 0x00);
     // phx3d8014_WriteReg(i2c_num, phx3d8014_REG_ADDR12, 0x00);
 
-    rst = phx3d8014_readReg(i2c_num, 0x08);
-    LOGI(TAG, "register0x08: %d", rst);
+    // rst = phx3d8014_readReg(i2c_num, phx3d8014_REG_ADDR12);
+    // LOGI(TAG, "register12: %d", rst);
 
     // rst = phx3d8014_readReg(i2c_num, phx3d8014_REG_ADDR02);
     // LOGI(TAG, "register02: %d", rst);
@@ -729,8 +723,8 @@ static led_ops_t phx3d8014_led_ops = {
     .release = phx3d8014_release,
     .enable = phx3d8014_enable,
     .disable = phx3d8014_disable,
-    .suspend = phx3d8014_disable,
-    .resume = phx3d8014_enable,
+    .suspend = phx3d8014_suspend,
+    .resume = phx3d8014_resume,
     .get_current_range = phx3d8014_get_current_range_wrapper,
     .set_current = phx3d8014_set_current_wrapper,
     .set_timeout = phx3d8014_set_timeout_ms,

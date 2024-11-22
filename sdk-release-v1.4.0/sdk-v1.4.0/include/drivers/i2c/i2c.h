@@ -167,6 +167,25 @@ int i2c_send_recv_data(i2c_device_number_t i2c_num, uint32_t slave_address, cons
                   size_t receive_buf_len);
 
 /**
+ * @brief       I2c send receive data
+ *
+ * @param[in]   i2c_num             i2c number
+ * @param[in]   send_buf            send data address
+ * @param[in]   send_buf_len        length of send buf
+ * @param[in]   receive_buf         receive buf address
+ * @param[in]   receive_buf_len     length of receive buf
+ *
+ * @return      result
+ *     - 0      Success
+ *     - Other  Fail
+ *
+ * @note  this function will will generate
+ *        restart after send data
+*/
+int i2c_send_recv_data2(i2c_device_number_t i2c_num, uint32_t slave_address, const uint8_t *send_buf, size_t send_buf_len, uint8_t *receive_buf,
+                  size_t receive_buf_len);
+
+/**
  * @brief       I2c receive data by dma
  *
  * @param[in]   i2c_num             i2c number

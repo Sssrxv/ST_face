@@ -5,9 +5,9 @@
     "sensor": {
       "comment": ["Left IR", "Right IR", "RGB"],
       "sensor_udevices": ["og01a1b_dev2", "og01a1b_dev1", "og01a1b_dev0"],
-      "mipi": [2, 1, 0],
+      "mipi": [1, 0, 2],
       "i2c_num": [2, 2, 0],
-      "i2c_addr": [96, 16, 16],
+      "i2c_addr": [16, 96, 96],
       "mclk_id": [1, 1, 0],
       "power_pin": [2, 2, 29],
       "reset_pin": [2, 2, 0],
