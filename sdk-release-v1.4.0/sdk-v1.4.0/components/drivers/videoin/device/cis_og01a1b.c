@@ -42,7 +42,7 @@ typedef struct _og01a1b_REG_T {
     uint8_t         data;
 }og01a1b_REG_T;
 
-static uint32_t og01a1b_i2c_addr = SENSOR_ADDR_WR_MASTER;
+static uint32_t og01a1b_i2c_addr = SENSOR_ADDR_WR_SLAVE;
 
 static og01a1b_REG_T og01a1b_start_regs[] __ATTR_ALIGN__(32) = {
 	{0x0100, 0x01},
@@ -492,6 +492,7 @@ static int og01a1b_write_reg(int i2c_num, uint8_t i2c_addr, uint16_t reg_addr, u
     return ret;
 }
 
+
 static int og01a1b_read_reg(int i2c_num, uint8_t i2c_addr, uint16_t reg_addr, uint8_t *reg_val)
 {
     int ret;
@@ -499,9 +500,11 @@ static int og01a1b_read_reg(int i2c_num, uint8_t i2c_addr, uint16_t reg_addr, ui
     uint8_t addr_buf[2];
 
     addr_buf[0] = (reg_addr >> 8) & 0xff;
-    addr_buf[1] = (reg_addr >> 0) & 0xff;
-    
+    addr_buf[1] = (reg_addr >> 0) & 0xff; 
+
     ret = i2c_send_data(i2c_num, og01a1b_i2c_addr, &addr_buf[0], 2);
+    LOGE(__func__, "ret = %d addr = %d ", ret, og01a1b_i2c_addr);
+
     if (ret < 0) {
         return ret;
     }
@@ -599,7 +602,7 @@ static int og01a1b_init(const og01a1b_REG_T *reg_list, int cnt,
 
     i2c_init(i2c_num, i2c_addr, 7, 350*1000);
 
-    // LOGI(__func__, "i2c:%d, addr:%d.", i2c_num, i2c_addr);
+    LOGI(__func__, "i2c:%d, addr:%d.", i2c_num, i2c_addr);
 
     if (og01a1b_i2c_test(i2c_num, i2c_addr) < 0) {
         return -1;
@@ -612,7 +615,7 @@ static int og01a1b_init(const og01a1b_REG_T *reg_list, int cnt,
 
     // ret = og01a1b_read_reg(i2c_num, i2c_addr, 0x3006, &addr_value); 
     // LOGD(TAG, "addr_value: 0x%x.", addr_value);
-
+    LOGI(__func__, "og01a1b_init SUCCESS");
     return ret;
 }
 
@@ -955,7 +958,7 @@ static cis_dev_driver_t og01a1b_dev1 = {
 static cis_dev_driver_t og01a1b_dev2 = {
     .name                   = "og01a1b_dev2",
     .i2c_num                = I2C_DEVICE_2,
-	.i2c_tar_addr           = SENSOR_ADDR_WR_MASTER,
+	.i2c_tar_addr           = SENSOR_ADDR_WR_SLAVE,
     .power_pin              = GPIO_PIN2,
     .reset_pin              = GPIO_PIN2,
     .mclk_id                = CIS_MCLK_ID_MCLK1,
