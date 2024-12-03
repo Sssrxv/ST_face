@@ -28,7 +28,7 @@ static void mpq7235_power_on(void);
 static void timeout_cb(TimerHandle_t timer)
 {
     mpq7235_cfg_t* _dev = (mpq7235_cfg_t*)pvTimerGetTimerID(timer);
-    // gpio_set_pin(23, GPIO_PV_LOW);
+    // mpq7235_power_off();
 }
 #endif
 
@@ -76,7 +76,6 @@ int mpq7235_led_init(led_dev_t *dev)
                    (void *)_dev,
                    timeout_cb);
 #endif
-    LOGE(TAG, "gpio init SUCCESS\n");
     return 0;
 }
 
@@ -124,6 +123,7 @@ int mpq7235_led_suspend(led_dev_t *dev)
     dev->is_suspend = 1;
     mpq7235_power_off();
     pwm_set_enable(m_pwm_dev, 0);
+    
     return 0;
 }
 
@@ -207,7 +207,7 @@ static int mpq7235_pwm_init(void)
     pwm_init(m_pwm_dev);
     pwm_set_enable(m_pwm_dev, 0);
     /*  The init value is 1K, and the duty cycle is 50% */
-    pwm_set_frequency(m_pwm_dev, 1*1000, 0.5);
+    pwm_set_frequency(m_pwm_dev, 1*1000, 0.9);
 
     return 0;
 }
