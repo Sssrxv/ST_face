@@ -14,14 +14,15 @@
 #define SENSOR_ADDR_WR_MASTER               (0xc0 >> 1) 
 #define SENSOR_ADDR_WR_SLAVE                (0x20 >> 1)
 
-#define MONO_CAMERA_ENABLE      (1)
-#define STEREO_CAMERA_ENABLE    (0)
+#define MONO_SMALL_CAMERA_ENABLE        (0)
+#define MONO_BIG_CAMERA_ENABLE          (1)
+#define STEREO_CAMERA_ENABLE            (0)
 #define TAG                      "cis_og01a1b"
 
-#if MONO_CAMERA_ENABLE
+#if MONO_SMALL_CAMERA_ENABLE
 #define W_VGA                    (640)
 #define H_VGA                    (480)
-#else
+#else if MONO_BIG_CAMERA_ENABLE || STEREO_CAMERA_ENABLE
 #define W_VGA                    (1280)
 #define H_VGA                    (800)
 #endif
@@ -42,7 +43,6 @@ typedef struct _og01a1b_REG_T {
     uint8_t         data;
 }og01a1b_REG_T;
 
-static uint32_t og01a1b_i2c_addr = SENSOR_ADDR_WR_SLAVE;
 
 static og01a1b_REG_T og01a1b_start_regs[] __ATTR_ALIGN__(32) = {
 	{0x0100, 0x01},
@@ -192,7 +192,145 @@ static const og01a1b_REG_T og01a1b_common_regs[] __ATTR_ALIGN__(32) = {
 };
 #endif
 
-#if MONO_CAMERA_ENABLE
+#if MONO_BIG_CAMERA_ENABLE
+/* 1280*800 */
+static const og01a1b_REG_T og01a1b_common_regs[] __ATTR_ALIGN__(32) = {
+{0x0103, 0x01},
+{0x0300, 0x01},
+{0x0301, 0x00}, 
+{0x0302, 0x20},
+{0x0303, 0x00},
+{0x0304, 0x03},
+{0x0305, 0x02},
+{0x0306, 0x01},
+{0x030a, 0x00},
+{0x030b, 0x04},
+{0x030c, 0x00},
+{0x030d, 0x51},
+{0x030e, 0x04},
+{0x030f, 0x07},
+{0x0312, 0x07},
+{0x0313, 0x01},
+{0x0314, 0x00},
+{0x4837, 0x1F},
+{0x3103, 0x00},
+// ;PLL END
+
+{0x3001, 0x00},
+{0x3004, 0x00},
+{0x3005, 0x00},
+{0x3006, 0x04},
+{0x3011, 0x0a},
+{0x3013, 0x18},
+{0x301c, 0xf0},
+{0x3022, 0x01},
+{0x3030, 0x10},
+{0x3039, 0x32},
+{0x303a, 0x00},
+{0x3500, 0x00},
+{0x3501, 0x2a},
+{0x3502, 0x90},
+{0x3503, 0x08},
+{0x3505, 0x8c},
+{0x3507, 0x03},
+{0x3508, 0x00},
+{0x3509, 0x10},
+{0x3610, 0x80},
+{0x3611, 0xa0},
+{0x3620, 0x6e},
+{0x3632, 0x56},
+{0x3633, 0x78},
+{0x3666, 0x00},
+{0x366f, 0x5a},
+{0x3680, 0x84},
+{0x3712, 0x80},
+{0x372d, 0x22},
+{0x3731, 0x80},
+{0x3732, 0x30},
+{0x3778, 0x00},
+{0x377d, 0x22},
+{0x3788, 0x02},
+{0x3789, 0xa4},
+{0x378a, 0x00},
+{0x378b, 0x4a},
+{0x3799, 0x20},
+{0x3800, 0x00},
+{0x3801, 0x00},
+{0x3802, 0x00},
+{0x3803, 0x00},
+{0x3804, 0x05},
+{0x3805, 0x0f},
+{0x3806, 0x03},
+{0x3807, 0x2f},
+{0x3808, 0x05},
+{0x3809, 0x00},
+{0x380a, 0x03},
+{0x380b, 0x20},
+{0x380c, 0x03},
+{0x380d, 0xDE}, // ;Line_length_pclk 1980
+{0x380e, 0x07},
+{0x380f, 0x1A}, // ;Frame_length_line 1818
+{0x3810, 0x00},
+{0x3811, 0x08},
+{0x3812, 0x00},
+{0x3813, 0x08},
+{0x3814, 0x11},
+{0x3815, 0x11},
+{0x3820, 0x40},
+{0x3821, 0x00},
+{0x382c, 0x05},
+{0x382d, 0xb0},
+{0x389d, 0x00},
+{0x3881, 0x42},
+{0x3882, 0x01},
+{0x3883, 0x00},
+{0x3885, 0x02},
+{0x38a8, 0x02},
+{0x38a9, 0x80},
+{0x38b1, 0x00},
+{0x38b3, 0x02},
+{0x38c4, 0x00},
+{0x38c5, 0xc0},
+{0x38c6, 0x04},
+{0x38c7, 0x80},
+{0x3920, 0xff},
+{0x4003, 0x40},
+{0x4008, 0x04},
+{0x4009, 0x0b},
+{0x400c, 0x00},
+{0x400d, 0x07},
+{0x4010, 0x40},
+{0x4043, 0x40},
+{0x4307, 0x30},
+{0x4317, 0x00},
+{0x4501, 0x00},
+{0x4507, 0x00},
+{0x4509, 0x00},
+{0x450a, 0x08},
+{0x4601, 0x04},
+{0x470f, 0x00},
+{0x4f07, 0x00},
+{0x4800, 0x00},
+{0x5000, 0x9f},
+{0x5001, 0x00},
+{0x5e00, 0x00},
+{0x5d00, 0x07},
+{0x5d01, 0x00},
+{0x4f00, 0x04},
+{0x4f10, 0x00},
+{0x4f11, 0x98},
+{0x4f12, 0x0f},
+{0x4f13, 0xc4},
+{0x3662, 0x01},
+{0x5000, 0x87},
+{0x0100, 0x01},
+{0x3501, 0x10},
+{0x3502, 0x00}, //  ; 100h =256 row period =9.38667ms
+};
+#endif
+
+#if MONO_SMALL_CAMERA_ENABLE
+/* 640*480 */
 static const og01a1b_REG_T og01a1b_common_regs[] __ATTR_ALIGN__(32) = {
 {0x0103, 0x01},
 {0x0106, 0x00},
@@ -492,7 +630,6 @@ static int og01a1b_write_reg(int i2c_num, uint8_t i2c_addr, uint16_t reg_addr, u
     return ret;
 }
 
-
 static int og01a1b_read_reg(int i2c_num, uint8_t i2c_addr, uint16_t reg_addr, uint8_t *reg_val)
 {
     int ret;
@@ -500,19 +637,18 @@ static int og01a1b_read_reg(int i2c_num, uint8_t i2c_addr, uint16_t reg_addr, ui
     uint8_t addr_buf[2];
 
     addr_buf[0] = (reg_addr >> 8) & 0xff;
-    addr_buf[1] = (reg_addr >> 0) & 0xff; 
-
-    ret = i2c_send_data(i2c_num, og01a1b_i2c_addr, &addr_buf[0], 2);
-    LOGE(__func__, "ret = %d addr = %d ", ret, og01a1b_i2c_addr);
-
+    addr_buf[1] = (reg_addr >> 0) & 0xff;
+    
+    ret = i2c_send_data(i2c_num, i2c_addr, &addr_buf[0], 2);
     if (ret < 0) {
         return ret;
     }
 
-    ret = i2c_recv_data(i2c_num, og01a1b_i2c_addr, 0, 0, reg_val, 1);
+    ret = i2c_recv_data(i2c_num, i2c_addr, 0, 0, reg_val, 1);
     
     return ret;
 }
+#if 0
 static int og01a1b_read_regs(
         int             i2c_num,
         uint8_t             i2c_addr,
@@ -535,6 +671,7 @@ static int og01a1b_read_regs(
     return ret;
     
 }
+#endif
 
 static int og01a1b_program_regs(
         int             i2c_num,
@@ -602,7 +739,7 @@ static int og01a1b_init(const og01a1b_REG_T *reg_list, int cnt,
 
     i2c_init(i2c_num, i2c_addr, 7, 350*1000);
 
-    LOGI(__func__, "i2c:%d, addr:%d.", i2c_num, i2c_addr);
+    // LOGI(__func__, "i2c:%d, addr:%d.", i2c_num, i2c_addr);
 
     if (og01a1b_i2c_test(i2c_num, i2c_addr) < 0) {
         return -1;
@@ -615,7 +752,7 @@ static int og01a1b_init(const og01a1b_REG_T *reg_list, int cnt,
 
     // ret = og01a1b_read_reg(i2c_num, i2c_addr, 0x3006, &addr_value); 
     // LOGD(TAG, "addr_value: 0x%x.", addr_value);
-    LOGI(__func__, "og01a1b_init SUCCESS");
+
     return ret;
 }
 
@@ -799,6 +936,7 @@ static int cis_og01a1b_stop_stream(cis_dev_driver_t *dev_driver)
     }
     return ret;
 }
+
 static void cis_og01a1b_power_on(cis_dev_driver_t *dev_driver)
 {
     int pow_pin = dev_driver->power_pin;
@@ -829,10 +967,10 @@ static void cis_og01a1b_reset(cis_dev_driver_t *dev_driver)
 static int cis_og01a1b_get_interface_param(cis_dev_driver_t *dev_driver, cis_interface_param_t *param)
 {
     param->interface_type                   = CIS_INTERFACE_TYPE_MIPI;
-#if MONO_CAMERA_ENABLE
+#if MONO_SMALL_CAMERA_ENABLE
     param->mipi_param.freq                  = 800;
 #endif
-#if STEREO_CAMERA_ENABLE
+#if STEREO_CAMERA_ENABLE || MONO_BIG_CAMERA_ENABLE
     param->mipi_param.freq                  = 512;
 #endif
     param->mipi_param.lane_num              = 1;

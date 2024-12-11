@@ -15,7 +15,7 @@
       "fps": [15, 15, 15]
     },
     "led" : {
-      "udevice": "phx3d8014"
+      "udevice": "mpq7235"
     }
   },
   "common" : {

@@ -69,6 +69,9 @@ menu "Device drivers"
 	config PHX3D8014
 		bool "PHX3D8014 driver"
 		default n
+	config MPQ7235
+		bool "MPQ7235 driver"
+		default n
 	
     comment "USB gadget drivers"
 	config USB_SINK_LPBK
