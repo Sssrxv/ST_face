@@ -15,6 +15,7 @@ all: elf bin img rom
 
 INC_APP_DIR  += -I$(PROJ_ROOT)
 SOURCE_APP_C += $(PROJ_ROOT)/main.c
+SOURCE_APP_C += $(PROJ_ROOT)/flash_test/flash_test.c
 # SOURCE_APP_C += $(PROJ_ROOT)/veml6031x00.c
 
 # libfacelock

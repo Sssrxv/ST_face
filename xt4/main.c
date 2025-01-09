@@ -18,11 +18,16 @@
 
 static pthread_t tid1;
 
+extern void flash_test_entry();
+
 static void* test_facelock_entry(void* parameter)
 {
     (void)parameter;
-
+#if 1
     facelock_sdk_uart_mode_test_entry();
+#else
+    flash_test_entry();
+#endif
 
     return NULL;
 }
