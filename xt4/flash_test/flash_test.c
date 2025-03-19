@@ -18,12 +18,11 @@ static int test_case_nor_flash_full_chip_test(uint32_t spi_rate_div)
 {
     int ret = 0;
     uint32_t buf_len;
-    uint8_t *rd_buf;
-    uint8_t *wr_buf;
+    uint8_t *rd_buf = NULL;
+    uint8_t *wr_buf = NULL;
     uint32_t i;
     uint32_t seed;
     nor_flash_param_t param;
-    uint32_t pre_cycle;
     float speed;
     uint32_t elapse_cost= 0;
     long time_counter = 0;
@@ -105,12 +104,11 @@ END:
 
 void flash_test_entry()
 {
-    int ret = 0;
-
+    uint32_t i = 0;
     LOGI("nor_flash", "test only keep fw0 fw1 part.");
 
     uint8_t spi_rate_div[] = {2, 4, 8, 16};
-    for(int i = 0; i < sizeof(spi_rate_div)/ sizeof(spi_rate_div[0]); i++)
+    for(i = 0; i < sizeof(spi_rate_div)/ sizeof(spi_rate_div[0]); i++)
     {
         test_case_nor_flash_full_chip_test(spi_rate_div[i]);
     }

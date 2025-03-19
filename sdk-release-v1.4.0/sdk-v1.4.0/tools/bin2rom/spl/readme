@@ -1,9 +1,0 @@
-typedef enum _ddr_freq_t {
-    DDR_800M  = 0,
-    DDR_1066M = 1,
-    DDR_1333M = 2,
-    DDR_1600M = 3,
-    DDR_MAX,
-} ddr_freq_t;
-
-

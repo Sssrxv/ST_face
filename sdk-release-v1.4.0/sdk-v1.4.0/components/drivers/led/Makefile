@@ -18,7 +18,3 @@ endif
 ifeq ($(CONFIG_PHX3D8014),y)
 SOURCE_LIB_C += $(SDK_ROOT)/components/drivers/led/device/phx3d8014.c
 endif
-
-ifeq ($(CONFIG_MPQ7235),y)
-SOURCE_LIB_C += $(SDK_ROOT)/components/drivers/led/device/mpq7235.c
-endif

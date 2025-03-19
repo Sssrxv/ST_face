@@ -64,4 +64,7 @@ endif
 ifeq ($(CONFIG_SHELL_USB_ACM_UPLOAD),y)
 SOURCE_LIB_C += $(SDK_ROOT)/components/shell_utils/cmds_usb_acm_upload.c
 endif
+ifeq ($(CONFIG_SHELL_MEM_USAGE),y)
+SOURCE_LIB_C += $(SDK_ROOT)/components/shell_utils/cmds_mem_usage.c
+endif
 SOURCE_LIB_C += $(SDK_ROOT)/components/shell_utils/cmds_log_cfg.c

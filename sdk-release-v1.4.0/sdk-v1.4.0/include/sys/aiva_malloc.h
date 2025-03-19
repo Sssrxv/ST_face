@@ -52,6 +52,8 @@ void  aiva_dma_free(void *userptr);
 
 size_t aiva_get_free_heap_size(void);
 
+int aiva_get_heap_usage(void);
+
 #ifdef __cplusplus
 }
 #endif

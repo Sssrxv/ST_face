@@ -20,11 +20,13 @@ SOURCE_APP_C += $(PROJ_ROOT)/flash_test/flash_test.c
 
 # libfacelock
 INC_APP_DIR  += -I$(PROJ_ROOT)/../libfacelock
+INC_APP_DIR  += -I$(PROJ_ROOT)/driver
 
 # libfacelock
 DEPEND_LIBS  += $(PROJ_ROOT)/../libfacelock/libfacelock.a
 
 SOURCE_APP_C += $(PROJ_ROOT)/../libfacelock/facelock_sdk_test.c
+SOURCE_APP_C += $(PROJ_ROOT)/driver/mpq7235.c
 
 
 .PHONY: rom

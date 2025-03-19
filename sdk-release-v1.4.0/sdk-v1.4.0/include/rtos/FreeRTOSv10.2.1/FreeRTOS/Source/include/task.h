@@ -1736,6 +1736,8 @@ void vTaskList( char * pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unquali
  */
 void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
+void vTaskGetRunTimeStats2( char *pcWriteBuffer, uint32_t* idle_usgae) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+
 /**
 * task. h
 * <PRE>TickType_t xTaskGetIdleRunTimeCounter( void );</PRE>

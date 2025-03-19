@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-static const char* TAG = "mpq7235.c";
+// static const char* TAG = "mpq7235.c";
 
 static pwm_device_number_t m_pwm_dev = PWM_DEVICE_0;
 static int mpq7235_pwm_init(void);
@@ -27,7 +27,8 @@ static void mpq7235_power_on(void);
 #if USE_RTOS
 static void timeout_cb(TimerHandle_t timer)
 {
-    mpq7235_cfg_t* _dev = (mpq7235_cfg_t*)pvTimerGetTimerID(timer);
+    (void)timer;
+    // mpq7235_cfg_t* _dev = (mpq7235_cfg_t*)pvTimerGetTimerID(timer);
     // mpq7235_power_off();
 }
 #endif
@@ -45,7 +46,6 @@ static void mpq7235_power_off(void)
 
 int mpq7235_led_init(led_dev_t *dev)
 {
-    uint8_t ret;
     mpq7235_cfg_t* _dev = (mpq7235_cfg_t*)dev->priv;
     uint8_t pin = _dev->pin;
     int timeout_ms = dev->timeout_ms;
@@ -163,7 +163,7 @@ int mpq7235_cfg_trigger(led_dev_t *dev)
 {
     configASSERT(dev->priv != NULL);
     mpq7235_cfg_t* _dev = (mpq7235_cfg_t*)dev->priv;
-    uint8_t pin = _dev->pin;
+    // uint8_t pin = _dev->pin;
     int timeout_ms = dev->timeout_ms;
     if (!dev->is_suspend)
     {
