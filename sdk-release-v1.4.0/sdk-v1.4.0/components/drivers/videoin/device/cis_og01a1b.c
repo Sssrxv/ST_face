@@ -990,9 +990,14 @@ static int cis_og01a1b_get_exposure_param(cis_dev_driver_t *dev_driver, cis_expo
     exp_param->max_dgain    = MAX_DGAIN;
     exp_param->step_dgain   = 1.0;
 
-    exp_param->min_itime    = 1.0;
-    exp_param->max_itime    = MAX_EXPOSURE;
+    exp_param->min_itime    = 100;
+    exp_param->max_itime    = 180;
     exp_param->step_itime   = 1.0;
+
+    exp_param->initial_again = MAX_AGAIN/3;
+    exp_param->initial_dgain = 1;
+    exp_param->initial_itime = 130; // 120 ~ 160
+
     return 0;
 }
 
