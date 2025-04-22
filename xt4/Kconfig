@@ -1,4 +1,9 @@
 # source Kconfig of sdk
-rsource "../sdk-release-v1.4.0/sdk/Kconfig"
+rsource "../sdk/Kconfig"
 
 # add more config for you own project
+menu "XT4 project config"
+	config FW1_IMG
+		bool "Build fw1 image"
+		default n
+endmenu

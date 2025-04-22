@@ -1,4 +1,0 @@
-# source Kconfig of sdk
-rsource "../../sdk/Kconfig"
-
-# add more config for you own project

@@ -1,0 +1,79 @@
+
+#
+# AIVA ai31xx SDK Kconfig
+#
+# CONFIG_DEBUG is not set
+
+#
+# Chip seclect
+#
+# CONFIG_USE_FPGA is not set
+# CONFIG_CHIP310X is not set
+CONFIG_CHIP310XH=y
+# end of Chip seclect
+
+#
+# Memory map configure
+#
+# CONFIG_MEM_MANU_CONFIG is not set
+# end of Memory map configure
+
+#
+# Log system configuration
+#
+CONFIG_LOG_ENABLE=y
+CONFIG_LOG_COLORS=y
+
+#
+# 0: no log, 1: error, 2: warning, 3: info, 4: debug, 5: verbose
+#
+CONFIG_LOG_LEVEL=4
+# end of Log system configuration
+
+#
+# SDK modules
+#
+CONFIG_USE_XNN=y
+CONFIG_USE_GUI=y
+# CONFIG_USE_LVGL is not set
+CONFIG_USE_NET=y
+# CONFIG_USE_LWIP is not set
+CONFIG_USE_UIP=y
+CONFIG_USE_FS=y
+CONFIG_USE_ELLIPTIC=y
+CONFIG_USE_USB2OTG=y
+# CONFIG_USE_IMU is not set
+# CONFIG_USE_LED is not set
+# CONFIG_USE_MBEDSSL is not set
+CONFIG_USE_H264=y
+# CONFIG_H264_USE_DMA_MEM is not set
+CONFIG_USE_LIBJPEG=y
+# CONFIG_USE_LIBJPEG_TURBO is not set
+# end of SDK modules
+
+#
+# SDK feature
+#
+# CONFIG_ENABLE_DYNAMIC_MEMPOOL is not set
+# CONFIG_VIDEOIN_OPTIMIZE_CONTINUE_BUFFER is not set
+CONFIG_LETTER_SHELL_SHOW_SHELL_INFO=y
+# end of SDK feature
+
+#
+# Components device drivers (Internal)
+#
+
+#
+# USB gadget drivers
+#
+CONFIG_UVC_ISOC_CAMERA=y
+CONFIG_UVC_UAC_ISOC=y
+
+#
+# Videoin MIPI-CIS drivers
+#
+# CONFIG_MIPI_CIS_OV02B is not set
+# CONFIG_MIPI_CIS_OV9282 is not set
+# CONFIG_MIPI_CIS_SC2310 is not set
+# CONFIG_MIPI_CIS_SC2310_HDR is not set
+# end of Components device drivers (Internal)

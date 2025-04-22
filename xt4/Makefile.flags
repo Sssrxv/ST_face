@@ -1,0 +1,3 @@
+ifeq ($(CONFIG_FW1_IMG),y)
+	CFLAGS += -DFW1_IMG_USE
+endif

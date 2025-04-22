@@ -20,9 +20,22 @@ static pthread_t tid1;
 
 extern void flash_test_entry();
 
+static void xt4_fw1_entry(void)
+{
+    LOGI(__func__, "xt4 fw1 entry");
+    while(1)
+    {
+        LOGI(__func__, "xt4 fw1 thread running");
+        sleep(3);
+    }
+}
+
 static void* test_facelock_entry(void* parameter)
 {
     (void)parameter;
+#ifdef FW1_IMG_USE
+    xt4_fw1_entry();
+#endif
 #if 1
     facelock_sdk_uart_mode_test_entry();
 #else
