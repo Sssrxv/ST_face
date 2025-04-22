@@ -7,3 +7,12 @@ menu "XT4 project config"
 		bool "Build fw1 image"
 		default n
 endmenu
+
+menu "Version info"
+	config XT4_TARGET_FW_VER
+		hex "FW version xx.xx.xxxx"
+		default 0x01010000
+	config XT4_TARGET_FW_BUILD_TIME
+		string "FW build date YYMMDD"
+		default 250420
+endmenu

@@ -140,5 +140,5 @@ CONFIG_SHELL_MEM_USAGE=y
 #
 # XT4 project config
 #
-CONFIG_FW1_IMG=y
+# CONFIG_FW1_IMG is not set
 # end of XT4 project config

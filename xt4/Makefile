@@ -31,6 +31,7 @@ SOURCE_APP_C += $(PROJ_ROOT)/../libfacelock/facelock_sdk_test.c
 SOURCE_APP_C += $(PROJ_ROOT)/driver/led/led_driver.c
 SOURCE_APP_C += $(PROJ_ROOT)/driver/led/device/mpq7235.c
 SOURCE_APP_C += $(PROJ_ROOT)/driver/videoin/cis_og01a1b.c
+SOURCE_APP_C += $(PROJ_ROOT)/fw_version.c
 
 
 .PHONY: rom

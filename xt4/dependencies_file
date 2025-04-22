@@ -154,6 +154,7 @@
  ../sdk/include/./drivers/udevice.h ../sdk/include/./sys/aiva_sleep.h \
  ../sdk/include/./sys/syslog.h \
  ../sdk/include/./rtos/FreeRTOSv10.2.1/FreeRTOS/Source/include/atomic.h
+./obj/fw_version.o: fw_version.c
 ./obj/audio_dev.o: ../sdk/components/drivers/audio/audio_dev.c \
  ../sdk/components/drivers/audio/audio_dev.h \
  ../sdk/include/./drivers/i2c/i2c.h ../sdk/include/./drivers/dmac/dmac.h \
