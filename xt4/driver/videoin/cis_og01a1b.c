@@ -34,6 +34,7 @@
 // maximum exposure time is frame length - 14
 #define MAX_EXPOSURE    (641 - 14)
 #define MAX_AGAIN       (0xf8)
+#define MAX_AGAIN_RATE  (15)
 #define MAX_DGAIN       (0x1)
 #define AGAIN_OFFSET    (10)
 
@@ -983,8 +984,8 @@ static int cis_og01a1b_get_exposure_param(cis_dev_driver_t *dev_driver, cis_expo
 {
     (void)dev_driver;
     exp_param->min_again    = 1.0;
-    exp_param->max_again    = MAX_AGAIN;
-    exp_param->step_again   = 1;
+    exp_param->max_again    = MAX_AGAIN_RATE;
+    exp_param->step_again   = 0.1;
 
     exp_param->min_dgain    = 1.0;
     exp_param->max_dgain    = MAX_DGAIN;
@@ -994,7 +995,7 @@ static int cis_og01a1b_get_exposure_param(cis_dev_driver_t *dev_driver, cis_expo
     exp_param->max_itime    = MAX_EXPOSURE;
     exp_param->step_itime   = 1.0;
 
-    exp_param->initial_again = MAX_AGAIN/2;
+    exp_param->initial_again = 0x80;
     exp_param->initial_dgain = 1;
     exp_param->initial_itime = MAX_EXPOSURE; // 120 ~ 160
 
@@ -1006,7 +1007,7 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     i2c_device_number_t i2c_num = dev_driver->i2c_num;
     uint8_t i2c_addr = dev_driver->i2c_tar_addr;
     // og01a1b_i2c_addr = SENSOR_ADDR_WR_MASTER;
-    float again = exp->again;
+    float again = exp->again * 16;
     float dgain = exp->dgain;
     float itime = exp->itime;
 
@@ -1027,9 +1028,10 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h);
 
     // again
-    uint8_t again_coarse = (int)again;
+    int again_coarse = (int)again;
     if (again_coarse > MAX_AGAIN)
     {
+        // 15.5x
         again_coarse = MAX_AGAIN;
     }
 
