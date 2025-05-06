@@ -338,7 +338,7 @@ static void delete_user_test()
 // even do not print some debug info as following example
 static void notify_callback(facelock_facestate_t facestate, const facelock_face_pose_t *face_pose)
 {
-    (void)face_pose; // avoid warning
+    (void)face_pose;
     LOGI("", "facestate:%d", facestate);
 }
 

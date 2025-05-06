@@ -22,7 +22,7 @@
 #if MONO_SMALL_CAMERA_ENABLE
 #define W_VGA                    (640)
 #define H_VGA                    (480)
-#else if MONO_BIG_CAMERA_ENABLE || STEREO_CAMERA_ENABLE
+#elif MONO_BIG_CAMERA_ENABLE || STEREO_CAMERA_ENABLE
 #define W_VGA                    (1280)
 #define H_VGA                    (800)
 #endif
@@ -992,12 +992,12 @@ static int cis_og01a1b_get_exposure_param(cis_dev_driver_t *dev_driver, cis_expo
     exp_param->step_dgain   = 1.0;
 
     exp_param->min_itime    = 1.0;
-    exp_param->max_itime    = MAX_EXPOSURE;
+    exp_param->max_itime    = 600;
     exp_param->step_itime   = 1.0;
 
     exp_param->initial_again = 0x80;
     exp_param->initial_dgain = 1;
-    exp_param->initial_itime = MAX_EXPOSURE; // 120 ~ 160
+    exp_param->initial_itime = 600; // 120 ~ 160
 
     return 0;
 }
@@ -1034,6 +1034,11 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
         // 15.5x
         again_coarse = MAX_AGAIN;
     }
+    else if(again_coarse < 0x10)
+    {
+        // 1x
+        again_coarse = 0x10;
+    }
 
     og01a1b_write_reg(i2c_num, i2c_addr, 0x3509, again_coarse);
 
@@ -1049,6 +1054,7 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
 
 static int cis_og01a1b_get_resolution(cis_dev_driver_t *dev_driver, cis_frame_param_t *param)
 {
+    (void)dev_driver;
     param->width = W_VGA;
     param->height = H_VGA;
     param->framerate = 15;
