@@ -1010,6 +1010,7 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     float again = exp->again * 16;
     float dgain = exp->dgain;
     float itime = exp->itime;
+    int itime_tmp = 0;
 
     LOGI("set exp", "again:%f, dgain:%f, item:%f.", again, dgain, itime);
 
@@ -1019,13 +1020,18 @@ static int cis_og01a1b_set_exposure(cis_dev_driver_t *dev_driver, const cis_expo
     // exposure
     uint8_t itime_h;
     uint8_t itime_l;
-    uint32_t exposure = (int)itime;
-    if (exposure > MAX_EXPOSURE)
-        exposure = MAX_EXPOSURE;
-    itime_l = exposure & 0xff;
+    if (itime > MAX_EXPOSURE)
+        itime = MAX_EXPOSURE;
+
+    itime_tmp = (int)itime;
+    uint32_t exposure = itime_tmp << 4;
+
+    itime_l = exposure & 0xf0;
     itime_h = (exposure >> 8) & 0xff;
-    og01a1b_write_reg(i2c_num, i2c_addr, 0x3502, itime_l);
-    og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h);
+
+    LOGI("set exp reg", "itime h:0x%02x, l:0x%02x.", itime_h, itime_l);
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3502, itime_l); // [7:0]
+    og01a1b_write_reg(i2c_num, i2c_addr, 0x3501, itime_h); // [15:8]
 
     // again
     int again_coarse = (int)again;

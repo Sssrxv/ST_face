@@ -206,7 +206,7 @@ static int mpq7235_pwm_init(void)
     pwm_init(m_pwm_dev);
     pwm_set_enable(m_pwm_dev, 0);
     /*  The init value is 1K, and the duty cycle is 50% */
-    pwm_set_frequency(m_pwm_dev, 1*1000, 0.9);
+    pwm_set_frequency(m_pwm_dev, 1*1000, 0.5);
 
     return 0;
 }
