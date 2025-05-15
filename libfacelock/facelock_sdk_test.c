@@ -231,7 +231,6 @@ static void enroll_verify_test()
 static bool should_exit = false;
 static void *reset_running_cmd_thread(void *param)
 {
-    (void)param;
     LOGD("", "%s running", __func__);
     while (!should_exit)
     {
@@ -338,7 +337,6 @@ static void delete_user_test()
 // even do not print some debug info as following example
 static void notify_callback(facelock_facestate_t facestate, const facelock_face_pose_t *face_pose)
 {
-    (void)face_pose;
     LOGI("", "facestate:%d", facestate);
 }
 
