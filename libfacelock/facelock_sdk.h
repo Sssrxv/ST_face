@@ -59,7 +59,7 @@ typedef struct
     uint8_t admin;                      // enroll as admin or not, 1 - admin, 0 - normal user
     uint8_t user_name[MAX_USER_NAME_SIZE];
     uint8_t face_direction;             // facelock_face_direction_t, enroll face of this direction
-    uint8_t enroll_type;                // 0 - interactive, 1 - single
+    uint8_t enroll_type;                // 0 - interactive, 1 - single, 2  face and palm mix, 3 - 211 hand enroll
     /* 0 - Don't allow duplicated enrollment, but the user name can be duplicated.
      * 1 - Allow duplicated enrollment and the user name can be duplicated.
      * 2 - Allow duplicated enrollment, but the user name can't be duplicated.
@@ -89,6 +89,7 @@ typedef struct
     uint8_t user_name[MAX_USER_NAME_SIZE];    // name of this user
     uint8_t admin;                            // user is admin or not
     uint8_t unlock_status;                    // unlock status
+    uint8_t user_type;                        // 0: face, 1: left hand, 2: right hand
 } facelock_verify_result_t;
 
 typedef enum
@@ -236,6 +237,13 @@ typedef enum
     FACELOCK_FOCUS_RGB_MODE
 } facelock_focus_mode_t;
 
+typedef enum
+{
+    FACELOCK_USER_TYPE_FACE = 0,
+    FACELOCK_USER_TYPE_LEFT_HAND,
+    FACELOCK_USER_TYPE_RIGHT_HAND,
+} facelock_user_type_t;
+
 /**
  * @brief  initilize facelock module with notify callback
  * @note   notify call back is used to report current face state
@@ -356,6 +364,15 @@ int facelock_delete_user(uint16_t user_id);
  * @return  0: OK, -1: Failed
  */
 int facelock_delete_all_user();
+
+/**
+ * @brief.delete all user in face database by user type
+ *
+ * @note will return 0 if.face database is empty
+ *
+ *@return 0: 0K, -1: Failed
+*/
+int facelock_delete_all_user_by_type(facelock_user_type_t user_type);
 
 /**
  * @brief  get current user number in facedatabase

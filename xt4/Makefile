@@ -12,6 +12,10 @@ SWAPDW:=$(TOOLS_ROOT)/swapdw/swapdw
 MKLFS:=$(TOOLS_ROOT)/mklfs/mklfs
 XT4_FW1_DIR:=$(PROJ_ROOT)/fw1
 
+get_file_size = $(shell stat -L -c %s $(1))
+round_4k = $(shell echo "$$((($(1)+4095)/4096 * 4096))")
+get_4k_align_gap_size = $(shell echo "$$(($(call round_4k, $(call get_file_size, $(1)))-$(call get_file_size, $(1))))")
+
 all: elf bin img rom
 
 INC_APP_DIR  += -I$(PROJ_ROOT)
@@ -39,15 +43,19 @@ rom: $(BIN_DIR)/$(TARGET_ROM_NOR)
 
 $(BIN_DIR)/$(TARGET_ROM_NOR): $(BIN_DIR)/$(TARGET_IMG)
 	cp cfg/*.cfg $(BIN_DIR)
-	cp $(TOOLS_ROOT)/bin2rom/spl/*.img $(BIN_DIR)
+	cp spl/*.img $(BIN_DIR)
 	@gzip -c -9 $(BIN_DIR)/$(TARGET_IMG) > $(BIN_DIR)/$(TARGET_IMG).gz
 	$(SWAPDW) $(BIN_DIR)/$(TARGET_IMG) $(BIN_DIR)/fw0
-	$(SWAPDW) $(XT4_FW1_DIR)/xt4_fw1.img $(BIN_DIR)/fw1
+	# $(SWAPDW) $(XT4_FW1_DIR)/xt4_fw1.img $(BIN_DIR)/fw1
 	# 524288 is filesystem size, must match the value in .cfg file
-	$(MKLFS) -c fs_pack -b 4096 -r 256 -p 256 -s 524288 -i $(BIN_DIR)/fs.bin
+	$(MKLFS) -c fs_pack -b 4096 -r 256 -p 256 -s 131072 -i $(BIN_DIR)/fs.bin
 	$(SWAPDW) $(BIN_DIR)/fs.bin $(BIN_DIR)/fs
-	$(SWAPDW) $(XNN_MODEL_DIR)/facelock.xpack $(BIN_DIR)/xnn_wgt
-	$(BIN2ROM) $(BIN_DIR)/nor_spl.img $(BIN_DIR)/part_nor.cfg 0 $(BIN_DIR)/$(TARGET_ROM_NOR)
+	# $(SWAPDW) $(XNN_MODEL_DIR)/facelock.xpack $(BIN_DIR)/xnn_wgt
+	$(SWAPDW) $(XNN_MODEL_DIR)/facelock.xpack $(BIN_DIR)/xnn_wgt_face
+	$(SWAPDW) $(XNN_MODEL_DIR)/facelock_palvein.xpack $(BIN_DIR)/xnn_wgt_palmvein
+	@< /dev/zero tr '\000' '\377' | head -c $(call get_4k_align_gap_size, $(XNN_MODEL_DIR)/facelock.xpack) > $(BIN_DIR)/xnn_wgt_gap
+	@cat $(BIN_DIR)/xnn_wgt_face $(BIN_DIR)/xnn_wgt_gap $(BIN_DIR)/xnn_wgt_palmvein > $(BIN_DIR)/xnn_wgt
+	$(BIN2ROM) $(BIN_DIR)/nor_spl.img $(BIN_DIR)/part_nor.cfg 0 $(BIN_DIR)/$(TARGET_ROM_NOR) 102400 16384 1
 	@gzip -c -9 $(BIN_DIR)/$(TARGET_ROM_NOR) > $(BIN_DIR)/$(TARGET_ROM_NOR).gz
 
 include Makefile.flags

@@ -2,8 +2,8 @@ MEMORY
 {
   ROM (RX) : ORIGIN = (0x00000000), LENGTH = (8 * 1024)
   SRAM (WX) : ORIGIN = (0x10000000), LENGTH = (236 * 1024)
-  DDR (WX) : ORIGIN = (0x80000000), LENGTH = (128*1024 * 1024 - ((128*1024 - 116*1024) * 1024))
-  DMA (WX) : ORIGIN = ((0x80000000) + (128*1024 * 1024 - ((128*1024 - 116*1024) * 1024))), LENGTH = ((128*1024 - 116*1024) * 1024)
+  DDR (WX) : ORIGIN = (0x80000000), LENGTH = (65536 * 1024 - ((65536 - 63488) * 1024))
+  DMA (WX) : ORIGIN = ((0x80000000) + (65536 * 1024 - ((65536 - 63488) * 1024))), LENGTH = ((65536 - 63488) * 1024)
 }
 ENTRY(Reset_Handler)
 SECTIONS
@@ -105,10 +105,10 @@ SECTIONS
     } > DDR
     .heap (NOLOAD):
     {
-        . = ORIGIN(DDR) + (4*1024 * 1024);
+        . = ORIGIN(DDR) + (3072 * 1024);
         . = ALIGN(8);
         Image$$HEAP$$ZI$$Base = .;
-        . += (104*1024 * 1024);
+        . += (55296 * 1024);
         Image$$HEAP$$ZI$$Limit = .;
         __HeapLimit = .;
     } > DDR
@@ -122,17 +122,17 @@ SECTIONS
     {
         . = ALIGN(64);
         Image$$DMA_HEAP$$ZI$$Base = .;
-        . += (10*1024 * 1024);
+        . += (1024 * 1024);
         Image$$DMA_HEAP$$ZI$$Limit = .;
         . = ALIGN(64);
     } > DMA
     .stack (NOLOAD):
     {
-        . = ORIGIN(DDR) + (4*1024 * 1024) + (104*1024 * 1024);
+        . = ORIGIN(DDR) + (3072 * 1024) + (55296 * 1024);
         . = ALIGN(8);
         __StackTop = .;
         Image$$SYS_STACK$$ZI$$Base = .;
-        . += ((116*1024 * 1024) - (4*1024 * 1024) - (104*1024 * 1024)) - (256) - (1024) - (16*1024) - (16*1024) - (256);
+        . += ((63488 * 1024) - (3072 * 1024) - (55296 * 1024)) - (256) - (1024) - (16*1024) - (16*1024) - (256);
         Image$$SYS_STACK$$ZI$$Limit = .;
         __stack = .;
         Image$$FIQ_STACK$$ZI$$Base = .;

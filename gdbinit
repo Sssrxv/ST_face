@@ -1,9 +1,9 @@
-cd sdk-release-v1.4.0/
+# cd sdk-release-v1.4.0/
 source scripts/gdb/gdbdbg.gdb
 source scripts/gdb/sram.gdb
 reset
 
-cd ../
+# cd ../
 load xt4/bin/xt4.elf
 file xt4/bin/xt4.elf
 
