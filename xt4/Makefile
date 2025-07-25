@@ -54,7 +54,8 @@ $(BIN_DIR)/$(TARGET_ROM_NOR): $(BIN_DIR)/$(TARGET_IMG)
 	$(SWAPDW) $(XNN_MODEL_DIR)/facelock.xpack $(BIN_DIR)/xnn_wgt_face
 	$(SWAPDW) $(XNN_MODEL_DIR)/facelock_palvein.xpack $(BIN_DIR)/xnn_wgt_palmvein
 	@< /dev/zero tr '\000' '\377' | head -c $(call get_4k_align_gap_size, $(XNN_MODEL_DIR)/facelock.xpack) > $(BIN_DIR)/xnn_wgt_gap
-	@cat $(BIN_DIR)/xnn_wgt_face $(BIN_DIR)/xnn_wgt_gap $(BIN_DIR)/xnn_wgt_palmvein > $(BIN_DIR)/xnn_wgt
+	# @cat $(BIN_DIR)/xnn_wgt_face $(BIN_DIR)/xnn_wgt_gap $(BIN_DIR)/xnn_wgt_palmvein > $(BIN_DIR)/xnn_wgt
+	@cat $(BIN_DIR)/xnn_wgt_palmvein > $(BIN_DIR)/xnn_wgt
 	$(BIN2ROM) $(BIN_DIR)/nor_spl.img $(BIN_DIR)/part_nor.cfg 0 $(BIN_DIR)/$(TARGET_ROM_NOR) 102400 16384 1
 	@gzip -c -9 $(BIN_DIR)/$(TARGET_ROM_NOR) > $(BIN_DIR)/$(TARGET_ROM_NOR).gz
 
